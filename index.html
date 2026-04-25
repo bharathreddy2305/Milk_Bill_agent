@@ -911,27 +911,75 @@ function processVoice(txt){
 }
 
 // Telugu, English, Hindi Dictionaries
-function isYes(t){ return ['అవును', 'ఆ', 'హా', 'హాన్', 'yes', 'yeah', 'ok', 'ఒకే', 'haan', 'ji', 'జీ', 'తీసుకున్నారు', 'sure'].some(w => t.includes(w)); }
-function isNo(t){ return ['లేదు', 'లే', 'వద్దు', 'no', 'not', 'nahi', 'నహి', 'నహీ', 'తీసుకోలేదు', 'రాలేదు', 'absent'].some(w => t.includes(w)); }
-function isMorning(t){ return ['ఉదయం', 'పొద్దున', 'morning', 'మార్నింగ్', 'subah', 'సుబహ్', 'సుబా'].some(w => t.includes(w)); }
-function isEvening(t){ return ['సాయంత్రం', 'సంధ్య', 'evening', 'ఈవినింగ్', 'shaam', 'షాం', 'శ్యామ్'].some(w => t.includes(w)); }
+// ============================================================
+//  MULTI-LANGUAGE DICTIONARIES (EXPANDED)
+// ============================================================
+
+function isMorning(t){ 
+  return [
+    'ఉదయం', 'పొద్దున', 'పొద్దున్న', 'ఉదయమే', 'పొద్దుగాల', // Telugu variations
+    'morning', 'మార్నింగ్', // English & transliterated
+    'subah', 'సుబహ్', 'సుబా' // Hindi & transliterated
+  ].some(w => t.includes(w)); 
+}
+
+function isEvening(t){ 
+  return [
+    'సాయంత్రం', 'సాయింత్రం', 'సంధ్య', 'మాపు', // Telugu variations
+    'evening', 'ఈవినింగ్', // English & transliterated
+    'shaam', 'షాం', 'శ్యామ్' // Hindi & transliterated
+  ].some(w => t.includes(w)); 
+}
+
+function isYes(t){ 
+  return [
+    'అవును', 'ఆ', 'హా', 'హాన్', 'సరే', 'అలాగే', 'తీసుకున్నారు', 'తీసుకున్నాడు', 'తీసుకుంది', // Telugu
+    'yes', 'yeah', 'ok', 'ఒకే', 'ఓకే', 'sure', // English & transliterated
+    'haan', 'ji', 'జీ', 'హాఁ' // Hindi & transliterated
+  ].some(w => t.includes(w)); 
+}
+
+function isNo(t){ 
+  return [
+    'లేదు', 'లే', 'వద్దు', 'తీసుకోలేదు', 'రాలేదు', 'కాదు', 'ఇవ్వలేదు', 'లేదండి', // Telugu
+    'no', 'not', 'absent', 'ఆబ్సెంట్', // English & transliterated
+    'nahi', 'నహి', 'నహీ' // Hindi & transliterated
+  ].some(w => t.includes(w)); 
+}
 
 function parseQty(t){
-  const dm=t.match(/(\d+\.?\d*)/); if(dm){ const v=parseFloat(dm[1]); if(v>0&&v<=100) return v; }
+  // 1. First, try to catch actual numbers spoken or typed (like "2" or "1.5")
+  const dm=t.match(/(\d+\.?\d*)/); 
+  if(dm){ const v=parseFloat(dm[1]); if(v>0&&v<=100) return v; }
+  
+  // 2. Expanded dictionary mapping spoken words to numbers
   const nm={
-    'అర':0.5, 'హాఫ్':0.5, 'half':0.5, 'aadha':0.5, 'ఆధా':0.5,
-    'ఒకటి':1, 'ఒక':1, 'one':1, 'ek':1, 'ఏక్':1,
-    'రెండు':2, 'two':2, 'do':2, 'దో':2,
+    // Fractions (Half, 1.5, 2.5)
+    'అర':0.5, 'హాఫ్':0.5, 'half':0.5, 'aadha':0.5, 'ఆధా':0.5, 'అరలీటరు':0.5,
+    'ఒకటిన్నర':1.5, 'dedh':1.5, 'డేడ్':1.5,
+    'రెండున్నర':2.5, 'dhai':2.5, 'ఢాయీ':2.5, 'డై':2.5,
+    
+    // Whole Numbers (1 to 10) in Telugu, English, Hindi
+    'ఒకటి':1, 'ఒక':1, 'one':1, 'ek':1, 'ఏక్':1, 'ఒకలీటరు':1, 'వన్':1,
+    'రెండు':2, 'two':2, 'do':2, 'దో':2, 'టూ':2,
     'మూడు':3, 'three':3, 'teen':3, 'తీన్':3,
     'నాలుగు':4, 'four':4, 'chaar':4, 'చార్':4,
-    'అయిదు':5, 'five':5, 'paanch':5, 'పాంచ్':5,
-    'ఆరు':6, 'six':6, 'chhe':6, 'ఛే':6,
-    'ఏడు':7, 'seven':7, 'saat':7, 'సాత్':7,
-    'ఎనిమిది':8, 'eight':8, 'aath':8, 'ఆత్':8,
-    'తొమ్మిది':9, 'nine':9, 'nau':9, 'నౌ':9,
-    'పది':10, 'ten':10, 'das':10, 'దస్':10
+    'ఐదు':5, 'అయిదు':5, 'five':5, 'paanch':5, 'పాంచ్':5, 'ఫైవ్':5,
+    'ఆరు':6, 'six':6, 'chhe':6, 'ఛే':6, 'సిక్స్':6,
+    'ఏడు':7, 'seven':7, 'saat':7, 'సాత్':7, 'సెవెన్':7,
+    'ఎనిమిది':8, 'eight':8, 'aath':8, 'ఆత్':8, 'ఎయిట్':8,
+    'తొమ్మిది':9, 'nine':9, 'nau':9, 'నౌ':9, 'నైన్':9,
+    'పది':10, 'ten':10, 'das':10, 'దస్':10, 'టెన్':10
   };
-  for(const [w,n] of Object.entries(nm)){ if(t.includes(w)) return n; }
+  
+  // Sort the dictionary by word length (longest first). 
+  // This prevents the app from hearing "ఒకటిన్నర" (1.5) but mistakenly stopping at "ఒకటి" (1).
+  const sortedKeys = Object.keys(nm).sort((a, b) => b.length - a.length);
+  
+  for(const w of sortedKeys){ 
+    if(t.includes(w)) return nm[w]; 
+  }
+  
   return null;
 }
 
