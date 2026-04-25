@@ -699,6 +699,9 @@ function delC(id){
 
 function closeM(){ document.getElementById('modal-c').classList.remove('open'); }
 
+// ============================================================
+//  WHATSAPP
+// ============================================================
 function sendWA(id){
   const c=DB.gc().find(x=>x.id===id);
   if(!c||!c.phone){ toast('మొబైల్ నంబర్ లేదు! ముందు జోడించండి.'); return; }
@@ -709,8 +712,12 @@ function sendWA(id){
   const tA=recs.reduce((s,r)=>s+r.amount,0);
   const mn=MONS[now.getMonth()];
   const msg=`నమస్కారం ${c.name} గారు! 🐄\n\n📅 ${mn} ${now.getFullYear()} పాల బిల్లు:\n━━━━━━━━━━━━\n🥛 మొత్తం పాలు: ${tL.toFixed(1)} లీటర్లు\n💰 మొత్తం బిల్లు: ₹${tA.toFixed(0)}\n━━━━━━━━━━━━\nధన్యవాదాలు! 🙏`;
-  window.open(`https://wa.me/91${c.phone}?text=${encodeURIComponent(msg)}`);
+  
+  // FIX: Check if the number already starts with 91 to prevent doubling it
+  const phoneNum = c.phone.startsWith('91') ? c.phone : '91' + c.phone;
+  window.open(`https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`);
 }
+
 
 function initReport(){
   const sel=document.getElementById('rep-sel');
