@@ -950,16 +950,33 @@ function isNo(t){
 function parseQty(t){
   // 1. First, try to catch actual numbers spoken or typed (like "2" or "1.5")
   const dm=t.match(/(\d+\.?\d*)/); 
+  // If the number is between 0 and 100, accept it. (If it hears "250" or "750", it will skip this and check the dictionary below)
   if(dm){ const v=parseFloat(dm[1]); if(v>0&&v<=100) return v; }
   
-  // 2. Expanded dictionary mapping spoken words to numbers
+  // 2. Expanded dictionary mapping spoken words to exact decimal numbers
   const nm={
-    // Fractions (Half, 1.5, 2.5)
-    'అర':0.5, 'హాఫ్':0.5, 'half':0.5, 'aadha':0.5, 'ఆధా':0.5, 'అరలీటరు':0.5,
-    'ఒకటిన్నర':1.5, 'dedh':1.5, 'డేడ్':1.5,
-    'రెండున్నర':2.5, 'dhai':2.5, 'ఢాయీ':2.5, 'డై':2.5,
+    // 250ml / 0.25L
+    'పావు':0.25, 'పావులీటరు':0.25, 'పావు లీటరు':0.25, '250':0.25, '250ml':0.25, 'paavu':0.25, 'పావ్':0.25, 'pav':0.25,
     
-    // Whole Numbers (1 to 10) in Telugu, English, Hindi
+    // 500ml / 0.5L (Half)
+    'అర':0.5, 'హాఫ్':0.5, 'half':0.5, 'aadha':0.5, 'ఆధా':0.5, 'అరలీటరు':0.5, '500':0.5, '500ml':0.5,
+
+    // 750ml / 0.75L
+    'ముప్పావు':0.75, 'ముప్పావులీటరు':0.75, 'ముప్పావు లీటరు':0.75, '750':0.75, '750ml':0.75, 'muppaavu':0.75, 'paune':0.75, 'పోనే':0.75,
+
+    // 1.25L
+    'ఒకటింబావు':1.25, 'ఒకటి పావు':1.25, 'సవా':1.25, 'sava':1.25, 'సవా లీటరు':1.25,
+
+    // 1.5L
+    'ఒకటిన్నర':1.5, 'dedh':1.5, 'డేడ్':1.5, 'ఒకటిన్నర లీటరు':1.5,
+
+    // 1.75L
+    'ఒకటి ముప్పావు':1.75, 'పావు తక్కువ రెండు':1.75, 'పావుతక్కువ రెండు':1.75, 'paune do':1.75,
+
+    // 2.5L
+    'రెండున్నర':2.5, 'dhai':2.5, 'ఢాయీ':2.5, 'డై':2.5, 'రెండున్నర లీటరు':2.5,
+
+    // Whole Numbers (1 to 10)
     'ఒకటి':1, 'ఒక':1, 'one':1, 'ek':1, 'ఏక్':1, 'ఒకలీటరు':1, 'వన్':1,
     'రెండు':2, 'two':2, 'do':2, 'దో':2, 'టూ':2,
     'మూడు':3, 'three':3, 'teen':3, 'తీన్':3,
@@ -973,7 +990,7 @@ function parseQty(t){
   };
   
   // Sort the dictionary by word length (longest first). 
-  // This prevents the app from hearing "ఒకటిన్నర" (1.5) but mistakenly stopping at "ఒకటి" (1).
+  // This ensures "పావు తక్కువ రెండు" (1.75) is caught before it accidentally catches just "రెండు" (2)
   const sortedKeys = Object.keys(nm).sort((a, b) => b.length - a.length);
   
   for(const w of sortedKeys){ 
