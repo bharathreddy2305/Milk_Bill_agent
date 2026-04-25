@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🐄 పాల డైరీ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#FFF8E1;--card:#FFFDE7;--primary:#F57F17;--pdark:#E65100;
+  --green:#2E7D32;--red:#C62828;--blue:#1565C0;
+  --text:#1A0800;--muted:#795548;--border:#FFE082;
+  --shadow:0 4px 16px rgba(245,127,23,0.2);
+}
+body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:500px;margin:0 auto;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#F57F17,#E65100);color:#fff;padding:16px 18px 12px;box-shadow:0 3px 12px rgba(0,0,0,0.25);}
+.hdr h1{font-size:1.5rem;font-weight:800;letter-spacing:.5px;}
+.hdr p{font-size:.85rem;opacity:.9;margin-top:3px;}
+
+/* CARDS */
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:18px;margin:12px;box-shadow:var(--shadow);}
+
+/* BUTTONS */
+.btn{display:block;width:100%;padding:17px 16px;border:none;border-radius:14px;font-family:inherit;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .15s;margin:7px 0;letter-spacing:.3px;}
+.btn:active{transform:scale(.96);opacity:.9;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-success{background:var(--green);color:#fff;}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary);}
+.btn-grey{background:#757575;color:#fff;}
+.btn-sm{padding:11px 14px;font-size:.9rem;width:auto;display:inline-block;border-radius:10px;margin:4px;}
+
+/* HOME */
+.hero{text-align:center;padding:28px 16px 8px;}
+.hero .ico{font-size:5rem;display:block;animation:bounce 2s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero h2{font-size:2.2rem;font-weight:800;color:var(--pdark);margin-top:6px;}
+.hero p{color:var(--muted);font-size:1rem;margin-top:4px;}
+
+/* STATS GRID */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px;}
+.scard{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow);}
+.sval{font-size:2rem;font-weight:800;color:var(--pdark);}
+.slbl{font-size:.78rem;color:var(--muted);margin-top:3px;}
+
+/* SESSION GRID */
+.sess-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px;}
+.sess-btn{background:var(--card);border:2.5px solid var(--border);border-radius:18px;padding:28px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.sess-btn:active{transform:scale(.95);}
+.sess-btn .ico{font-size:3.5rem;display:block;margin-bottom:8px;}
+.sess-btn .lbl{font-size:1.3rem;font-weight:700;color:var(--pdark);}
+.sess-btn small{color:var(--muted);font-size:.85rem;}
+.sess-btn:hover,.sess-btn.sel{border-color:var(--primary);background:#FFF3E0;}
+
+/* ROLLCALL */
+.cust-card{text-align:center;padding:22px 16px;}
+.cnum{color:var(--muted);font-size:.9rem;font-weight:600;}
+.cname{font-size:2.8rem;font-weight:800;color:var(--pdark);margin:8px 0;line-height:1.2;}
+.cstatus{font-size:1.2rem;color:var(--muted);margin:10px 0;min-height:36px;}
+
+.pbar{height:8px;background:var(--border);border-radius:4px;margin:0 18px 4px;overflow:hidden;}
+.pfill{height:100%;background:var(--primary);border-radius:4px;transition:width .5s ease;}
+
+.mic-btn{width:88px;height:88px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:2.4rem;cursor:pointer;margin:14px auto;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(245,127,23,.45);transition:all .2s;}
+.mic-btn.listening{background:var(--red);animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(198,40,40,.55)}50%{box-shadow:0 0 0 22px rgba(198,40,40,0)}}
+.listen-lbl{text-align:center;color:var(--red);font-size:.9rem;font-weight:600;min-height:22px;}
+.transcript{background:#F5F5F5;border-radius:10px;padding:10px 14px;margin:6px 14px;min-height:38px;font-size:.88rem;color:var(--muted);font-style:italic;word-break:break-all;}
+
+.act-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 14px;}
+.act-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:6px 14px;}
+
+/* QTY */
+.qty-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0;}
+
+/* LIST ITEMS */
+.list-item{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border);}
+.list-item:last-child{border-bottom:none;}
+.lname{font-weight:700;font-size:1rem;}
+.ldetail{font-size:.8rem;color:var(--muted);margin-top:2px;}
+.badge{padding:4px 11px;border-radius:20px;font-size:.78rem;font-weight:700;}
+.b-green{background:#E8F5E9;color:var(--green);}
+.b-red{background:#FFEBEE;color:var(--red);}
+.b-grey{background:#F5F5F5;color:#757575;}
+
+/* CUST MGMT */
+.cust-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);}
+.cust-actions{display:flex;gap:6px;flex-shrink:0;}
+
+/* TABS */
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:20;}
+.tab{flex:1;padding:13px 6px;text-align:center;cursor:pointer;font-size:.83rem;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;background:#fff;display:flex;border-top:1.5px solid var(--border);z-index:100;}
+.bni{flex:1;padding:10px 4px 14px;text-align:center;cursor:pointer;color:var(--muted);transition:color .2s;}
+.bni.active{color:var(--primary);}
+.bni .bico{font-size:1.4rem;display:block;}
+.bni .blbl{font-size:.63rem;margin-top:2px;font-weight:600;}
+.pb80{padding-bottom:80px;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;}
+.overlay.open{display:flex;}
+.modal{background:#fff;border-radius:24px 24px 0 0;padding:24px 18px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal h3{font-size:1.25rem;font-weight:800;margin-bottom:14px;}
+.ig{margin-bottom:13px;}
+.ig label{display:block;font-size:.88rem;color:var(--muted);margin-bottom:5px;font-weight:700;}
+.ig input,.ig select{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:11px;font-family:inherit;font-size:1rem;background:var(--bg);}
+.ig input:focus,.ig select:focus{outline:none;border-color:var(--primary);}
+.modal-btns{display:flex;gap:8px;}
+
+/* TOAST */
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:11px 22px;border-radius:24px;font-size:.92rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{opacity:1;}
+
+/* VOICE STATUS BOX */
+.vbox{background:#FFF3E0;border:1.5px solid var(--primary);border-radius:12px;padding:12px 14px;margin:10px 14px;text-align:center;font-size:.95rem;font-weight:600;color:var(--pdark);}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="screen active" id="s-home">
+  <div class="hero">
+    <span class="ico">🐄</span>
+    <h2>పాల డైరీ</h2>
+    <p id="h-date"></p>
+  </div>
+  <div class="card">
+    <p id="h-greet" style="text-align:center;font-size:1.05rem;color:var(--muted);margin-bottom:14px;"></p>
+    
+    <div style="margin-bottom: 15px; text-align: center;">
+      <label style="font-weight:700; color:var(--pdark); display:block; margin-bottom:5px;">ఏ రోజు రికార్డ్ చేయాలి?</label>
+      <input type="date" id="session-date-picker" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); font-family:inherit; font-size:1rem;">
+    </div>
+
+    <button class="btn btn-primary" onclick="startSession()">▶ రికార్డ్ మొదలుపెట్టండి</button>
+    <button class="btn btn-outline" onclick="goReport()">📊 నెల బిల్లు చూడండి</button>
+  </div>
+  <div class="sgrid">
+    <div class="scard"><div class="sval" id="h-custs">0</div><div class="slbl">కస్టమర్లు 👥</div></div>
+    <div class="scard"><div class="sval" id="h-today">0</div><div class="slbl">ఈరోజు ✅</div></div>
+  </div>
+  <div class="card" style="background:#E8F5E9;border-color:#A5D6A7;">
+    <p style="font-size:.85rem;color:#2E7D32;font-weight:600;">💡 Chrome Browser లో తెరవండి. Telugu Voice కోసం Settings → Language → తెలుగు అని చేర్చండి.</p>
+  </div>
+  <div class="bnav">
+    <div class="bni active" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
+    <div class="bni" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
+  </div>
+</div>
+
+<div class="screen" id="s-session">
+  <div class="hdr"><h1>🐄 పాల డైరీ</h1><p id="sess-date"></p></div>
+  <div class="card" style="text-align:center;">
+    <p style="font-size:1.15rem;font-weight:700;">మీరు ఏ సమయం కస్టమర్లు చెప్పాలనుకుంటున్నారు?</p>
+    <p style="color:var(--muted);font-size:.9rem;margin-top:4px;">Which session do you want to record?</p>
+    
+    <div class="vbox" id="vbox-hint-sess" style="margin-top:20px;">🗣️ బటన్ నొక్కండి లేదా చెప్పండి</div>
+    <button class="mic-btn" id="mbtn-sess" onclick="toggleListen()">🎤</button>
+    <div class="listen-lbl" id="llbl-sess"></div>
+    <div class="transcript" id="tbox-sess">మీరు చెప్పేది ఇక్కడ కనిపిస్తుంది...</div>
+  </div>
+  
+  <div class="sess-grid">
+    <div class="sess-btn" onclick="pickSession('morning')">
+      <span class="ico">🌅</span><span class="lbl">ఉదయం</span><br><small>Morning</small>
+    </div>
+    <div class="sess-btn" onclick="pickSession('evening')">
+      <span class="ico">🌙</span><span class="lbl">సాయంత్రం</span><br><small>Evening</small>
+    </div>
+  </div>
+  <div style="margin:12px;">
+    <button class="btn btn-outline" onclick="go('s-home')">← వెనక్కి (Back)</button>
+  </div>
+</div>
+
+<div class="screen" id="s-rc">
+  <div class="hdr"><h1 id="rc-hdr">రోల్ కాల్</h1><p id="rc-prog-txt"></p></div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+
+  <div class="card cust-card">
+    <div class="cnum" id="rc-cnum"></div>
+    <div class="cname" id="rc-cname">కస్టమర్</div>
+    <div class="cstatus" id="rc-cstatus">పాలు తీసుకున్నారా?</div>
+    <button class="mic-btn" id="mbtn" onclick="toggleListen()">🎤</button>
+    <div class="listen-lbl" id="llbl"></div>
+    <div class="transcript" id="tbox">మీరు చెప్పేది ఇక్కడ కనిపిస్తుంది...</div>
+  </div>
+
+  <div id="pnl-yn">
+    <div class="vbox" id="vbox-hint">🗣️ బటన్ నొక్కండి లేదా చెప్పండి</div>
+    <div class="act-grid2">
+      <button class="btn btn-success" style="font-size:1.2rem;" onclick="doYes()">✅ అవును</button>
+      <button class="btn btn-danger" style="font-size:1.2rem;" onclick="doNo()">❌ లేదు</button>
+    </div>
+    <div class="act-grid3">
+      <button class="btn btn-outline btn-sm" onclick="doRepeat()">🔁 మళ్లీ</button>
+      <button class="btn btn-grey btn-sm" onclick="doSkip()">⏭ తర్వాత</button>
+      <button class="btn btn-blue btn-sm" onclick="finishRC()">🏁 ముగించు</button>
+    </div>
+  </div>
+
+  <div id="pnl-qty" style="display:none;">
+    <div class="card">
+      <p style="font-weight:700;font-size:1.05rem;text-align:center;margin-bottom:12px;">🥛 ఎంత పాలు తీసుకున్నారు? (లీటర్లు)</p>
+      <div class="qty-chips">
+        <button class="btn btn-outline btn-sm" onclick="setQty(.5)">½ L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(1)">1 L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(1.5)">1½ L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(2)">2 L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(2.5)">2½ L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(3)">3 L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(4)">4 L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(5)">5 L</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <input type="number" id="qinp" step="0.5" min="0.5" placeholder="లీటర్లు టైప్ చేయండి"
+          style="flex:1;padding:13px;border:1.5px solid var(--border);border-radius:11px;font-size:1.1rem;font-family:inherit;background:var(--bg);">
+        <button class="btn btn-success btn-sm" onclick="doQty()" style="padding:13px 18px;font-size:1rem;">✓ సేవ్</button>
+      </div>
+      <button class="btn btn-outline" style="margin-top:10px;" onclick="backToYN()">← వెనక్కి</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-sum">
+  <div class="hdr"><h1>✅ ఈరోజు సారాంశం</h1><p id="sum-date"></p></div>
+  <div class="sgrid">
+    <div class="scard"><div class="sval" id="su-pres">0</div><div class="slbl">వచ్చారు ✅</div></div>
+    <div class="scard"><div class="sval" id="su-abs">0</div><div class="slbl">రాలేదు ❌</div></div>
+    <div class="scard"><div class="sval" id="su-lit">0</div><div class="slbl">మొత్తం లీటర్లు 🥛</div></div>
+    <div class="scard"><div class="sval" id="su-amt">₹0</div><div class="slbl">మొత్తం అమౌంట్ 💰</div></div>
+  </div>
+  <div class="card">
+    <h3 style="margin-bottom:10px;font-size:1.05rem;">📋 వివరాలు</h3>
+    <div id="sum-list"></div>
+  </div>
+  <div style="margin:12px;">
+    <button class="btn btn-primary" onclick="startSession()">🔄 మరో సమయం చేయండి</button>
+    <button class="btn btn-outline" onclick="go('s-home')">🏠 హోమ్</button>
+  </div>
+</div>
+
+<div class="screen" id="s-custs">
+  <div class="hdr"><h1>👥 కస్టమర్లు</h1><p>మీ పాల కస్టమర్ల జాబితా</p></div>
+  <div style="margin:12px;">
+    <button class="btn btn-primary" onclick="openAdd()">➕ కొత్త కస్టమర్ జోడించండి</button>
+    <button class="btn btn-blue" onclick="backupData()" style="margin-top: 10px;">☁️ డేటాను WhatsApp కి బ్యాకప్ చేయండి</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="filterC('all',this)">అందరూ</div>
+    <div class="tab" onclick="filterC('morning',this)">🌅 ఉదయం</div>
+    <div class="tab" onclick="filterC('evening',this)">🌙 సాయంత్రం</div>
+  </div>
+  <div id="clist" class="pb80"></div>
+  <div class="bnav">
+    <div class="bni" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
+    <div class="bni active" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
+  </div>
+</div>
+
+<div class="screen" id="s-report">
+  <div class="hdr"><h1>📊 నెల బిల్లు</h1><p id="rep-hdr"></p></div>
+  <div style="margin:12px;display:flex;gap:8px;align-items:center;">
+    <select id="rep-sel" onchange="loadReport()" style="flex:1;padding:13px;border:1.5px solid var(--border);border-radius:11px;font-family:inherit;font-size:.95rem;background:var(--bg);"></select>
+    <select id="rep-sess" onchange="loadReport()" style="padding:13px;border:1.5px solid var(--border);border-radius:11px;font-family:inherit;font-size:.88rem;background:var(--bg);">
+      <option value="all">అన్ని</option>
+      <option value="morning">ఉదయం</option>
+      <option value="evening">సాయంత్రం</option>
+    </select>
+  </div>
+  <div class="sgrid">
+    <div class="scard"><div class="sval" id="rl">0</div><div class="slbl">మొత్తం లీటర్లు</div></div>
+    <div class="scard"><div class="sval" id="ra">₹0</div><div class="slbl">మొత్తం బిల్లు</div></div>
+  </div>
+  <div class="card"><h3 style="margin-bottom:10px;">కస్టమర్ వారీగా</h3><div id="rep-list"></div></div>
+  <div style="height:80px;"></div>
+  <div class="bnav">
+    <div class="bni" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
+    <div class="bni" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni active" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
+  </div>
+</div>
+
+<div class="screen" id="s-history">
+  <div class="hdr"><h1>📅 రోజువారీ చరిత్ర</h1><p>Daily Records</p></div>
+  <div style="margin:12px;">
+    <input type="date" id="hist-date" onchange="loadHistory()" style="width:100%;padding:13px;border:1.5px solid var(--border);border-radius:11px;font-family:inherit;font-size:1rem;background:var(--bg);">
+  </div>
+  <div class="card"><div id="hist-list"><p style="text-align:center;color:var(--muted);padding:20px;">తేదీ ఎంచుకోండి</p></div></div>
+  <div style="height:80px;"></div>
+  <div class="bnav">
+    <div class="bni" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
+    <div class="bni" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni active" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
+  </div>
+</div>
+
+<div class="overlay" id="modal-c">
+  <div class="modal">
+    <h3 id="m-title">కొత్త కస్టమర్ జోడించండి</h3>
+    <div class="ig"><label>పేరు (తెలుగు లేదా ఆంగ్లం) *</label><input id="m-name" type="text" placeholder="రాజు / Raju"></div>
+    <div class="ig"><label>మొబైల్ నంబర్ (WhatsApp కోసం)</label><input id="m-phone" type="tel" maxlength="10" placeholder="9876543210"></div>
+    <div class="ig"><label>సమయం *</label>
+      <select id="m-sess">
+        <option value="morning">🌅 ఉదయం (Morning)</option>
+        <option value="evening">🌙 సాయంత్రం (Evening)</option>
+        <option value="both">🌅🌙 రెండూ (Both)</option>
+      </select>
+    </div>
+    <div class="ig"><label>లీటర్కు ధర (₹) *</label><input id="m-price" type="number" value="60" placeholder="60"></div>
+    <div class="modal-btns">
+      <button class="btn btn-success" onclick="saveC()" style="flex:1;">💾 సేవ్ చేయండి</button>
+      <button class="btn btn-outline" onclick="closeM()" style="flex:1;">రద్దు</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  DATA LAYER — localStorage
+// ============================================================
+const DB = {
+  gc(){ return JSON.parse(localStorage.getItem('pd_c')||'[]'); },
+  sc(d){ localStorage.setItem('pd_c',JSON.stringify(d)); },
+  gr(){ return JSON.parse(localStorage.getItem('pd_r')||'[]'); },
+  sr(d){ localStorage.setItem('pd_r',JSON.stringify(d)); },
+  addRec(r){
+    const recs=this.gr();
+    const f=recs.filter(x=>!(x.cid===r.cid&&x.date===r.date&&x.sess===r.sess));
+    f.push(r); this.sr(f);
+  },
+  todayRecs(sess){
+    const t = workingDate || dtStr();
+    return this.gr().filter(r=>r.date===t&&(!sess||r.sess===sess));
+  },
+  monthRecs(ym){ return this.gr().filter(r=>r.date.startsWith(ym)); }
+};
+
+// ============================================================
+//  UTILS & GLOBALS
+// ============================================================
+let curSess=null, rcList=[], rcIdx=0, pendCust=null, mode='yn';
+let workingDate = null; 
+let pendingLiters = 0;  
+
+function dtStr(d){ const x=d||new Date(); return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}`; }
+function p2(n){ return String(n).padStart(2,'0'); }
+const DAYS=['ఆదివారం','సోమవారం','మంగళవారం','బుధవారం','గురువారం','శుక్రవారం','శనివారం'];
+const MONS=['జనవరి','ఫిబ్రవరి','మార్చి','ఏప్రిల్','మే','జూన్','జులై','ఆగష్టు','సెప్టెంబర్','అక్టోబర్','నవంబర్','డిసెంబర్'];
+function fmtDate(d){ const x=d||new Date(); return `${DAYS[x.getDay()]}, ${x.getDate()} ${MONS[x.getMonth()]} ${x.getFullYear()}`; }
+
+function toast(msg,ms=2600){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),ms);
+}
+
+// ============================================================
+//  SCREEN NAV
+// ============================================================
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='s-home') initHome();
+  if(id==='s-custs') renderC('all');
+  if(id==='s-history'){ const i=document.getElementById('hist-date'); i.value=dtStr(); loadHistory(); }
+}
+function goReport(){ go('s-report'); initReport(); }
+
+// ============================================================
+//  HOME
+// ============================================================
+function initHome(){
+  const d=new Date();
+  document.getElementById('h-date').textContent=fmtDate(d);
+  document.getElementById('session-date-picker').value = dtStr();
+
+  const h=d.getHours();
+  let g='';
+  if(h<12) g='శుభోదయం! 🌅 ఉదయం పాలు సమయం';
+  else if(h<17) g='శుభ మధ్యాహ్నం! ☀️';
+  else g='శుభ సాయంత్రం! 🌙 సాయంత్రం పాలు సమయం';
+  document.getElementById('h-greet').textContent=g;
+  
+  const cs=DB.gc().filter(c=>c.active);
+  document.getElementById('h-custs').textContent=cs.length;
+  
+  workingDate = dtStr();
+  document.getElementById('h-today').textContent=DB.todayRecs().length;
+  
+  // Notice we use the onEnd callback here safely
+  setTimeout(()=>{
+    spk(`నమస్కారం! ${g}. ఈరోజు ${fmtDate(d)}. రికార్డ్ మొదలుపెట్టాలంటే బటన్ నొక్కండి.`, true);
+  },400);
+}
+
+// ============================================================
+//  SPEECH — Improved Voice Engine (MOVED UP FOR ACCESSIBILITY)
+// ============================================================
+const synth = window.speechSynthesis;
+let teVoice = null;
+let enVoice = null;
+
+function loadVoices() {
+  const vs = synth.getVoices();
+  teVoice = vs.find(v => v.lang === 'te-IN' || v.lang.startsWith('te'));
+  enVoice = vs.find(v => v.lang === 'en-IN' || v.lang.startsWith('en'));
+}
+synth.onvoiceschanged = loadVoices; 
+loadVoices();
+
+// NEW: added onEndCallback to trigger mic exactly when speaking stops
+function spk(txt, forceEnglish = false, onEndCallback = null) {
+  try {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    
+    if (forceEnglish && enVoice) {
+      u.lang = 'en-IN';
+      u.voice = enVoice;
+    } else if (teVoice) {
+      u.lang = 'te-IN';
+      u.voice = teVoice;
+    } else {
+      u.lang = 'en-US';
+    }
+    
+    u.rate = 0.85; 
+    u.pitch = 1.0; 
+    
+    if(onEndCallback){
+        u.onend = onEndCallback;
+        // Fallback in case onend never fires due to browser glitch
+        u.onerror = onEndCallback;
+    }
+    
+    synth.speak(u);
+  } catch (e) { 
+    console.log('TTS err', e); 
+    // Fallback if TTS entirely fails
+    if(onEndCallback) setTimeout(onEndCallback, 1500);
+  }
+}
+
+// ============================================================
+//  SESSION & VOICE AUTO-ROUTING
+// ============================================================
+function startSession(){
+  const pickerVal = document.getElementById('session-date-picker').value;
+  workingDate = pickerVal ? pickerVal : dtStr(); 
+  
+  go('s-session');
+  document.getElementById('sess-date').textContent=workingDate;
+  
+  mode = 'choose_session'; 
+  
+  // Use the perfect timing callback to start listening
+  spk('మీరు ఉదయం కస్టమర్లు చెప్పాలా, సాయంత్రం కస్టమర్లు చెప్పాలా?', false, () => {
+      startListen();
+  });
+}
+
+function pickSession(sess){
+  curSess=sess;
+  const sn=sess==='morning'?'ఉదయం':'సాయంత్రం';
+  const custs=DB.gc().filter(c=>c.active&&(c.sess===sess||c.sess==='both'));
+  
+  if(!custs.length){
+    toast('ఈ సమయానికి కస్టమర్లు లేరు.');
+    spk('ఈ సమయానికి కస్టమర్లు లేరు. కస్టమర్లు జోడించండి.');
+    setTimeout(()=>go('s-custs'),2000); return;
+  }
+  
+  rcList=custs; rcIdx=0;
+  go('s-rc');
+  document.getElementById('rc-hdr').textContent=sn+' రోల్ కాల్ '+(sess==='morning'?'🌅':'🌙');
+  
+  spk(`${sn} సమయం మొదలుపెడుతున్నాము.`, false, () => {
+      nextCust();
+  });
+}
+
+// ============================================================
+//  ROLLCALL
+// ============================================================
+function nextCust(){
+  stopListen();
+  if(rcIdx>=rcList.length){ showSum(); return; }
+  mode='yn'; showPanel('yn');
+  const c=rcList[rcIdx];
+  const pct=(rcIdx/rcList.length)*100;
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('rc-prog-txt').textContent=`${rcIdx+1} / ${rcList.length}`;
+  document.getElementById('rc-cnum').textContent=`${rcIdx+1} వ కస్టమర్ · ${rcList.length} మందిలో`;
+  document.getElementById('rc-cname').textContent=c.name;
+  document.getElementById('rc-cstatus').textContent='పాలు తీసుకున్నారా?';
+  document.getElementById('tbox').textContent='మీరు చెప్పేది ఇక్కడ కనిపిస్తుంది...';
+  document.getElementById('qinp').value='';
+  
+  spk(`${c.name}, పాలు తీసుకున్నారా?`, false, () => {
+      startListen();
+  });
+}
+
+function doYes(){
+  stopListen();
+  pendCust=rcList[rcIdx];
+  mode='qty'; showPanel('qty');
+  document.getElementById('rc-cstatus').textContent='ఎంత పాలు తీసుకున్నారు?';
+  spk(`${pendCust.name} పాలు తీసుకున్నారు. ఎంత లీటర్లు చెప్పండి.`, false, () => {
+      startListen();
+  });
+}
+
+function doNo(){
+  stopListen();
+  const c=rcList[rcIdx];
+  DB.addRec({date:workingDate,cid:c.id,cname:c.name,sess:curSess,liters:0,amount:0,status:'absent'});
+  spk(`${c.name} పాలు తీసుకోలేదు. రికార్డ్ అయింది.`, false, () => {
+      rcIdx++; 
+      nextCust();
+  });
+}
+
+function doRepeat(){
+  stopListen();
+  const c=rcList[rcIdx];
+  spk(`మళ్లీ చెప్పండి. ${c.name}, పాలు తీసుకున్నారా?`, false, () => {
+      startListen();
+  });
+}
+
+function doSkip(){
+  stopListen();
+  const c=rcList[rcIdx];
+  DB.addRec({date:workingDate,cid:c.id,cname:c.name,sess:curSess,liters:0,amount:0,status:'skip'});
+  spk(`${c.name} తర్వాత రికార్డ్ చేద్దాం.`, false, () => {
+      rcIdx++; 
+      nextCust();
+  });
+}
+
+function backToYN(){ 
+    mode='yn'; 
+    showPanel('yn'); 
+    spk(`${rcList[rcIdx].name}, పాలు తీసుకున్నారా?`, false, () => {
+        startListen();
+    });
+}
+
+function setQty(v){ document.getElementById('qinp').value=v; }
+
+function doQty(){
+  const v=parseFloat(document.getElementById('qinp').value);
+  if(!v||v<=0){ toast('సరైన లీటర్లు చెప్పండి'); spk('సరైన లీటర్లు చెప్పండి', false, ()=>startListen()); return; }
+  saveQty(v);
+}
+
+function saveQty(liters){
+  stopListen();
+  const c=pendCust||rcList[rcIdx];
+  const price=c.price||60;
+  const amount=Math.round(liters*price*100)/100;
+  DB.addRec({date:workingDate,cid:c.id,cname:c.name,sess:curSess,liters,amount,status:'present'});
+  document.getElementById('rc-cstatus').textContent=`✅ ${liters} L = ₹${amount} — రికార్డ్ అయింది!`;
+  spk(`${c.name} ${liters} లీటర్లు. మొత్తం ₹${amount}. రికార్డ్ అయింది.`, false, () => {
+      rcIdx++; 
+      nextCust();
+  });
+}
+
+function finishRC(){ stopListen(); showSum(); }
+
+function showPanel(p){
+  document.getElementById('pnl-yn').style.display=p==='yn'?'block':'none';
+  document.getElementById('pnl-qty').style.display=p==='qty'?'block':'none';
+}
+
+// ============================================================
+//  SUMMARY
+// ============================================================
+function showSum(){
+  stopListen();
+  go('s-sum');
+  const recs=DB.todayRecs(curSess);
+  const pres=recs.filter(r=>r.status==='present');
+  const abs=recs.filter(r=>r.status==='absent');
+  const tL=pres.reduce((s,r)=>s+r.liters,0);
+  const tA=pres.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('sum-date').textContent=workingDate;
+  document.getElementById('su-pres').textContent=pres.length;
+  document.getElementById('su-abs').textContent=abs.length;
+  document.getElementById('su-lit').textContent=tL.toFixed(1);
+  document.getElementById('su-amt').textContent='₹'+tA.toFixed(0);
+  document.getElementById('sum-list').innerHTML=recs.map(r=>`
+    <div class="list-item">
+      <div>
+        <div class="lname">${r.cname}</div>
+        <div class="ldetail">${r.liters>0?r.liters+' L × ₹'+Math.round(r.amount/r.liters)+' = ₹'+r.amount:''}</div>
+      </div>
+      <span class="badge ${r.status==='present'?'b-green':r.status==='absent'?'b-red':'b-grey'}">
+        ${r.status==='present'?'✅ వచ్చారు':r.status==='absent'?'❌ రాలేదు':'⏭ తర్వాత'}
+      </span>
+    </div>
+  `).join('');
+  const sn=curSess==='morning'?'ఉదయం':'సాయంత్రం';
+  spk(`${sn} రికార్డ్ పూర్తయింది. ${pres.length} కస్టమర్లు పాలు తీసుకున్నారు. మొత్తం ${tL} లీటర్లు, ₹${tA}.`);
+}
+
+// ============================================================
+//  CUSTOMERS & REPORT & HISTORY 
+// ============================================================
+let editId=null, cf='all';
+function renderC(f){
+  cf=f;
+  const cs=DB.gc().filter(c=>f==='all'||c.sess===f||c.sess==='both');
+  const el=document.getElementById('clist');
+  if(!cs.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);">కస్టమర్లు లేరు.<br>➕ జోడించండి</div>'; return; }
+  el.innerHTML=cs.map(c=>`
+    <div class="cust-item">
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:1.05rem;">${c.name}</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          ${c.phone?'📱 '+c.phone:'📵 నంబర్ లేదు'} ·
+          ${c.sess==='morning'?'🌅':c.sess==='evening'?'🌙':'🌅🌙'} ·
+          ₹${c.price||60}/L
+        </div>
+      </div>
+      <div class="cust-actions">
+        ${c.phone?`<button class="btn btn-success btn-sm" onclick="sendWA('${c.id}')">📲</button>`:''}
+        <button class="btn btn-outline btn-sm" onclick="editC('${c.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="delC('${c.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterC(f,el){ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); renderC(f); }
+
+function openAdd(){
+  editId=null;
+  document.getElementById('m-title').textContent='కొత్త కస్టమర్ జోడించండి';
+  document.getElementById('m-name').value='';
+  document.getElementById('m-phone').value='';
+  document.getElementById('m-sess').value='morning';
+  document.getElementById('m-price').value='60';
+  document.getElementById('modal-c').classList.add('open');
+}
+
+function editC(id){
+  const c=DB.gc().find(x=>x.id===id); if(!c) return;
+  editId=id;
+  document.getElementById('m-title').textContent='కస్టమర్ సవరించు ✏️';
+  document.getElementById('m-name').value=c.name;
+  document.getElementById('m-phone').value=c.phone||'';
+  document.getElementById('m-sess').value=c.sess;
+  document.getElementById('m-price').value=c.price||60;
+  document.getElementById('modal-c').classList.add('open');
+}
+
+function saveC(){
+  const name=document.getElementById('m-name').value.trim();
+  const phone=document.getElementById('m-phone').value.trim();
+  const sess=document.getElementById('m-sess').value;
+  const price=parseFloat(document.getElementById('m-price').value)||60;
+  if(!name){ toast('పేరు చెప్పండి!'); return; }
+  const cs=DB.gc();
+  if(editId){
+    const i=cs.findIndex(x=>x.id===editId);
+    if(i>=0) cs[i]={...cs[i],name,phone,sess,price,active:true};
+  } else {
+    cs.push({id:'c_'+Date.now(),name,phone,sess,price,active:true});
+  }
+  DB.sc(cs); closeM(); renderC(cf);
+  toast(editId?'✅ సవరించబడింది!':'✅ జోడించబడింది!');
+}
+
+function delC(id){
+  if(!confirm('ఈ కస్టమర్ ను తొలగించాలా?')) return;
+  DB.sc(DB.gc().filter(c=>c.id!==id)); renderC(cf); toast('తొలగించబడింది');
+}
+
+function closeM(){ document.getElementById('modal-c').classList.remove('open'); }
+
+function sendWA(id){
+  const c=DB.gc().find(x=>x.id===id);
+  if(!c||!c.phone){ toast('మొబైల్ నంబర్ లేదు! ముందు జోడించండి.'); return; }
+  const now=new Date();
+  const ym=`${now.getFullYear()}-${p2(now.getMonth()+1)}`;
+  const recs=DB.monthRecs(ym).filter(r=>r.cid===id&&r.status==='present');
+  const tL=recs.reduce((s,r)=>s+r.liters,0);
+  const tA=recs.reduce((s,r)=>s+r.amount,0);
+  const mn=MONS[now.getMonth()];
+  const msg=`నమస్కారం ${c.name} గారు! 🐄\n\n📅 ${mn} ${now.getFullYear()} పాల బిల్లు:\n━━━━━━━━━━━━\n🥛 మొత్తం పాలు: ${tL.toFixed(1)} లీటర్లు\n💰 మొత్తం బిల్లు: ₹${tA.toFixed(0)}\n━━━━━━━━━━━━\nధన్యవాదాలు! 🙏`;
+  window.open(`https://wa.me/91${c.phone}?text=${encodeURIComponent(msg)}`);
+}
+
+function initReport(){
+  const sel=document.getElementById('rep-sel');
+  const now=new Date();
+  const opts=[];
+  for(let i=0;i<12;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const ym=`${d.getFullYear()}-${p2(d.getMonth()+1)}`;
+    opts.push(`<option value="${ym}">${MONS[d.getMonth()]} ${d.getFullYear()}</option>`);
+  }
+  sel.innerHTML=opts.join(''); loadReport();
+}
+
+function loadReport(){
+  const ym=document.getElementById('rep-sel').value;
+  const sessFilt=document.getElementById('rep-sess').value;
+  document.getElementById('rep-hdr').textContent=MONS[parseInt(ym.split('-')[1])-1]+' '+ym.split('-')[0];
+  let recs=DB.monthRecs(ym).filter(r=>r.status==='present');
+  if(sessFilt!=='all') recs=recs.filter(r=>r.sess===sessFilt);
+  const tL=recs.reduce((s,r)=>s+r.liters,0);
+  const tA=recs.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('rl').textContent=tL.toFixed(1);
+  document.getElementById('ra').textContent='₹'+tA.toFixed(0);
+  const byC={};
+  recs.forEach(r=>{ if(!byC[r.cid]) byC[r.cid]={name:r.cname,L:0,A:0,days:0,id:r.cid}; byC[r.cid].L+=r.liters; byC[r.cid].A+=r.amount; byC[r.cid].days++; });
+  const entries=Object.values(byC).sort((a,b)=>b.A-a.A);
+  const el=document.getElementById('rep-list');
+  if(!entries.length){ el.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px;">ఈ నెల రికార్డ్ లేదు</p>'; return; }
+  const cs=DB.gc();
+  el.innerHTML=entries.map(d=>{
+    const c=cs.find(x=>x.id===d.id);
+    return `
+    <div style="padding:13px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <div style="font-weight:800;font-size:1rem;">${d.name}</div>
+          <div style="font-size:.78rem;color:var(--muted);">${d.L.toFixed(1)} L · ${d.days} రోజులు</div>
+        </div>
+        <div style="font-size:1.4rem;font-weight:800;color:var(--pdark);">₹${d.A.toFixed(0)}</div>
+      </div>
+      ${c&&c.phone?`<button class="btn btn-success btn-sm" onclick="sendWA('${d.id}')" style="width:100%;padding:11px;">📲 WhatsApp బిల్లు పంపండి (${c.phone})</button>`:'<p style="font-size:.78rem;color:var(--muted);">📵 నంబర్ జోడించండి WhatsApp కోసం</p>'}
+    </div>`
+  }).join('');
+}
+
+function loadHistory(){
+  const d=document.getElementById('hist-date').value;
+  if(!d) return;
+  const recs=DB.gr().filter(r=>r.date===d);
+  const el=document.getElementById('hist-list');
+  if(!recs.length){ el.innerHTML='<p style="text-align:center;color:var(--muted);padding:20px;">ఈ తేదీకి రికార్డ్ లేదు</p>'; return; }
+  const pres=recs.filter(r=>r.status==='present');
+  const tL=pres.reduce((s,r)=>s+r.liters,0);
+  const tA=pres.reduce((s,r)=>s+r.amount,0);
+  el.innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <span style="background:#E8F5E9;color:var(--green);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">✅ ${pres.length} వచ్చారు</span>
+      <span style="background:#FFF3E0;color:var(--primary);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">🥛 ${tL.toFixed(1)} L</span>
+      <span style="background:#E3F2FD;color:var(--blue);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">💰 ₹${tA.toFixed(0)}</span>
+    </div>
+    ${recs.map(r=>`
+    <div class="list-item">
+      <div>
+        <div class="lname">${r.cname} <small style="color:var(--muted);font-size:.75rem;">${r.sess==='morning'?'🌅':'🌙'}</small></div>
+        <div class="ldetail">${r.liters>0?r.liters+' L · ₹'+r.amount:''}</div>
+      </div>
+      <span class="badge ${r.status==='present'?'b-green':r.status==='absent'?'b-red':'b-grey'}">
+        ${r.status==='present'?'✅':r.status==='absent'?'❌':'⏭'}
+      </span>
+    </div>`).join('')}`;
+}
+
+// ============================================================
+//  SPEECH RECOGNITION — Multi-language Engine
+// ============================================================
+let recog=null, listening=false;
+function startListen(){
+  if(listening) return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ toast('Voice: Chrome browser వాడండి! Buttons ఉపయోగించండి.'); return; }
+  synth.cancel();
+  setTimeout(()=>{
+    recog=new SR();
+    recog.lang='te-IN';
+    recog.continuous=false;
+    recog.interimResults=true;
+    recog.onstart=()=>{
+      listening=true;
+      const mb=document.getElementById('mbtn');
+      const mbSess=document.getElementById('mbtn-sess');
+      if(mb){ mb.classList.add('listening'); mb.textContent='🔴'; }
+      if(mbSess){ mbSess.classList.add('listening'); mbSess.textContent='🔴'; }
+      
+      const ll=document.getElementById('llbl');
+      const llSess=document.getElementById('llbl-sess');
+      if(ll) ll.textContent='🎤 వినటం జరుగుతోంది...';
+      if(llSess) llSess.textContent='🎤 వినటం జరుగుతోంది...';
+    };
+    recog.onend=()=>{
+      listening=false;
+      const mb=document.getElementById('mbtn');
+      const mbSess=document.getElementById('mbtn-sess');
+      if(mb){ mb.classList.remove('listening'); mb.textContent='🎤'; }
+      if(mbSess){ mbSess.classList.remove('listening'); mbSess.textContent='🎤'; }
+      
+      const ll=document.getElementById('llbl');
+      const llSess=document.getElementById('llbl-sess');
+      if(ll) ll.textContent='';
+      if(llSess) llSess.textContent='';
+    };
+    recog.onresult=(e)=>{
+      let fin='',tmp='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const t=e.results[i][0].transcript;
+        if(e.results[i].isFinal) fin+=t; else tmp+=t;
+      }
+      const txt=(fin||tmp).trim().toLowerCase();
+      
+      const tb=document.getElementById('tbox');
+      const tbSess=document.getElementById('tbox-sess');
+      if(tb) tb.textContent=txt;
+      if(tbSess) tbSess.textContent=txt;
+      
+      if(fin) processVoice(txt);
+    };
+    recog.onerror=(e)=>{ console.log('recog err',e.error); listening=false; };
+    try{ recog.start(); }catch(e){}
+  },350); // slight buffer to ensure TTS is completely released
+}
+
+function stopListen(){
+  if(recog){ try{ recog.stop(); }catch(e){} }
+  listening=false;
+  
+  const mb=document.getElementById('mbtn');
+  const mbSess=document.getElementById('mbtn-sess');
+  if(mb){ mb.classList.remove('listening'); mb.textContent='🎤'; }
+  if(mbSess){ mbSess.classList.remove('listening'); mbSess.textContent='🎤'; }
+  
+  const ll=document.getElementById('llbl');
+  const llSess=document.getElementById('llbl-sess');
+  if(ll) ll.textContent='';
+  if(llSess) llSess.textContent='';
+}
+
+function toggleListen(){ listening?stopListen():startListen(); }
+
+// ============================================================
+//  MULTI-LANGUAGE VOICE ROUTING LOGIC
+// ============================================================
+function processVoice(txt){
+  console.log('voice:',txt,'mode:',mode);
+  
+  if(mode === 'choose_session'){
+    if(isMorning(txt)) {
+      pickSession('morning');
+    } 
+    else if(isEvening(txt)) {
+      pickSession('evening');
+    } 
+    else {
+      spk('దయచేసి ఉదయం లేదా సాయంత్రం అని చెప్పండి', false, ()=>startListen());
+    }
+  } 
+  
+  else if(mode==='yn'){
+    if(isYes(txt)) doYes();
+    else if(isNo(txt)) doNo();
+    else if(txt.includes('మళ్లీ')||txt.includes('repeat')||txt.includes('phir')) doRepeat();
+    else if(txt.includes('తర్వాత')||txt.includes('skip')||txt.includes('baad')) doSkip();
+    else{ 
+      spk('అవును లేదా లేదు అని చెప్పండి', false, ()=>startListen()); 
+    }
+  
+  } else if(mode==='qty'){
+    const q = parseQty(txt);
+    if(q){ 
+      document.getElementById('qinp').value = q;
+      pendingLiters = q;
+      mode = 'confirm_qty';
+      spk(`${q} లీటర్లు. అవునా?`, false, ()=>startListen());
+    }
+    else{ 
+      spk('ఎంత లీటర్లు? మళ్లీ చెప్పండి.', false, ()=>startListen()); 
+    }
+  
+  } else if (mode === 'confirm_qty') {
+    if (isYes(txt)) {
+      saveQty(pendingLiters);
+    } else if (isNo(txt) || txt.includes('తప్పు') || txt.includes('wrong')) {
+      mode = 'qty';
+      spk('సరే, మళ్లీ చెప్పండి. ఎంత పాలు?', false, ()=>startListen());
+      document.getElementById('qinp').value = '';
+    } else {
+      spk('అవును లేదా లేదు అని చెప్పండి', false, ()=>startListen());
+    }
+  }
+}
+
+// Telugu, English, Hindi Dictionaries
+function isYes(t){ return ['అవును', 'ఆ', 'హా', 'హాన్', 'yes', 'yeah', 'ok', 'ఒకే', 'haan', 'ji', 'జీ', 'తీసుకున్నారు', 'sure'].some(w => t.includes(w)); }
+function isNo(t){ return ['లేదు', 'లే', 'వద్దు', 'no', 'not', 'nahi', 'నహి', 'నహీ', 'తీసుకోలేదు', 'రాలేదు', 'absent'].some(w => t.includes(w)); }
+function isMorning(t){ return ['ఉదయం', 'పొద్దున', 'morning', 'మార్నింగ్', 'subah', 'సుబహ్', 'సుబా'].some(w => t.includes(w)); }
+function isEvening(t){ return ['సాయంత్రం', 'సంధ్య', 'evening', 'ఈవినింగ్', 'shaam', 'షాం', 'శ్యామ్'].some(w => t.includes(w)); }
+
+function parseQty(t){
+  const dm=t.match(/(\d+\.?\d*)/); if(dm){ const v=parseFloat(dm[1]); if(v>0&&v<=100) return v; }
+  const nm={
+    'అర':0.5, 'హాఫ్':0.5, 'half':0.5, 'aadha':0.5, 'ఆధా':0.5,
+    'ఒకటి':1, 'ఒక':1, 'one':1, 'ek':1, 'ఏక్':1,
+    'రెండు':2, 'two':2, 'do':2, 'దో':2,
+    'మూడు':3, 'three':3, 'teen':3, 'తీన్':3,
+    'నాలుగు':4, 'four':4, 'chaar':4, 'చార్':4,
+    'అయిదు':5, 'five':5, 'paanch':5, 'పాంచ్':5,
+    'ఆరు':6, 'six':6, 'chhe':6, 'ఛే':6,
+    'ఏడు':7, 'seven':7, 'saat':7, 'సాత్':7,
+    'ఎనిమిది':8, 'eight':8, 'aath':8, 'ఆత్':8,
+    'తొమ్మిది':9, 'nine':9, 'nau':9, 'నౌ':9,
+    'పది':10, 'ten':10, 'das':10, 'దస్':10
+  };
+  for(const [w,n] of Object.entries(nm)){ if(t.includes(w)) return n; }
+  return null;
+}
+
+// ============================================================
+//  BACKUP FEATURE
+// ============================================================
+function backupData() {
+  const allRecords = DB.gr();
+  const allCusts = DB.gc();
+  
+  if (allRecords.length === 0 && allCusts.length === 0) {
+    toast('బ్యాకప్ చేయడానికి డేటా లేదు!');
+    return;
+  }
+
+  const backupJSON = JSON.stringify({ customers: allCusts, records: allRecords });
+  
+  // Replace this placeholder with your phone number (with country code, e.g., 919876543210)
+  const myNumber = "91966649078"; 
+  const msg = `📦 *పాల డైరీ బ్యాకప్* 📦\n\nతేదీ: ${fmtDate()}\n\nదయచేసి ఈ మెసేజ్ ని జాగ్రత్తగా దాచుకోండి. (కాపీ చేసి ఫైల్ లో సేవ్ చేసుకోండి):\n\n${backupJSON}`;
+  
+  window.open(`https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`);
+}
+
+// ============================================================
+//  INIT — Sample data if empty
+// ============================================================
+function initSamples(){
+  if(DB.gc().length>0) return;
+  DB.sc([
+    {id:'c1',name:'రాజు',phone:'',sess:'morning',price:60,active:true},
+    {id:'c2',name:'లక్ష్మి',phone:'',sess:'morning',price:60,active:true},
+    {id:'c3',name:'వెంకట్',phone:'',sess:'evening',price:65,active:true},
+    {id:'c4',name:'సుబ్బారావు',phone:'',sess:'both',price:60,active:true},
+  ]);
+}
+
+initSamples();
+initHome();
+</script>
+</body>
+</html>
