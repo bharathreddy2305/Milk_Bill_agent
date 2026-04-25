@@ -998,7 +998,7 @@ function backupData() {
   const backupJSON = JSON.stringify({ customers: allCusts, records: allRecords });
   
   // Replace this placeholder with your phone number (with country code, e.g., 919876543210)
-  const myNumber = "91966649078"; 
+  const myNumber = "919666496078"; 
   const msg = `📦 *పాల డైరీ బ్యాకప్* 📦\n\nతేదీ: ${fmtDate()}\n\nదయచేసి ఈ మెసేజ్ ని జాగ్రత్తగా దాచుకోండి. (కాపీ చేసి ఫైల్ లో సేవ్ చేసుకోండి):\n\n${backupJSON}`;
   
   window.open(`https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`);
