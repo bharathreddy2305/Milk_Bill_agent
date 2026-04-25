@@ -763,6 +763,9 @@ function loadReport(){
   }).join('');
 }
 
+// ============================================================
+//  HISTORY & DELETE FEATURE
+// ============================================================
 function loadHistory(){
   const d=document.getElementById('hist-date').value;
   if(!d) return;
@@ -784,11 +787,28 @@ function loadHistory(){
         <div class="lname">${r.cname} <small style="color:var(--muted);font-size:.75rem;">${r.sess==='morning'?'🌅':'🌙'}</small></div>
         <div class="ldetail">${r.liters>0?r.liters+' L · ₹'+r.amount:''}</div>
       </div>
-      <span class="badge ${r.status==='present'?'b-green':r.status==='absent'?'b-red':'b-grey'}">
-        ${r.status==='present'?'✅':r.status==='absent'?'❌':'⏭'}
-      </span>
+      <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge ${r.status==='present'?'b-green':r.status==='absent'?'b-red':'b-grey'}">
+            ${r.status==='present'?'✅':r.status==='absent'?'❌':'⏭'}
+          </span>
+          <button class="btn btn-danger btn-sm" style="padding:4px 8px; margin:0; border-radius:8px;" onclick="delRec('${r.cid}', '${r.date}', '${r.sess}')">🗑</button>
+      </div>
     </div>`).join('')}`;
 }
+
+// NEW: Function to safely delete a transaction
+function delRec(cid, date, sess) {
+  if(!confirm('ఈ రికార్డ్ ను తొలగించాలా? (Are you sure you want to delete this record?)')) return;
+  
+  const allRecs = DB.gr();
+  // Keep everything EXCEPT the specific record we want to delete
+  const filtered = allRecs.filter(r => !(r.cid === cid && r.date === date && r.sess === sess));
+  
+  DB.sr(filtered); // Save the updated list back to the database
+  loadHistory();   // Refresh the screen
+  toast('రికార్డ్ తొలగించబడింది 🗑'); // Show success message
+}
+
 
 // ============================================================
 //  SPEECH RECOGNITION — Multi-language Engine
