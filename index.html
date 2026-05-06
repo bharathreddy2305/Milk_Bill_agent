@@ -17,6 +17,9 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
 .screen{display:none;min-height:100vh;}
 .screen.active{display:block;}
 
+/* WORKER MODE RESTRICTIONS */
+body.worker-mode .owner-only { display: none !important; }
+
 /* HEADER */
 .hdr{background:linear-gradient(135deg,#F57F17,#E65100);color:#fff;padding:16px 18px 12px;box-shadow:0 3px 12px rgba(0,0,0,0.25);}
 .hdr h1{font-size:1.5rem;font-weight:800;letter-spacing:.5px;}
@@ -129,7 +132,22 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
 
 <div class="toast" id="toast"></div>
 
-<div class="screen active" id="s-home">
+<div class="screen active" id="s-login" style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; padding:20px;">
+  <div class="hero" style="margin-bottom:20px;">
+    <span class="ico">🐄</span>
+    <h2 style="font-size:2.5rem;">పాల డైరీ</h2>
+    <p>దయచేసి లాగిన్ అవ్వండి</p>
+  </div>
+  <div class="card" style="width:100%; max-width:400px; text-align:center;">
+    <h3 style="margin-bottom:20px; color:var(--pdark);">లాగిన్ (Login)</h3>
+    <input type="password" id="login-pin" placeholder="పాస్‌వర్డ్ (Password)" style="width:100%; padding:15px; border-radius:12px; border:2px solid var(--border); font-size:1.2rem; text-align:center; margin-bottom:20px; font-family:inherit; background:var(--bg);">
+    
+    <button class="btn btn-primary" onclick="doLogin('worker')">👨‍🌾 వర్కర్ లాగిన్ (Worker)</button>
+    <button class="btn btn-blue" onclick="doLogin('owner')" style="margin-top: 10px;">👑 ఓనర్ లాగిన్ (Owner)</button>
+  </div>
+</div>
+
+<div class="screen" id="s-home">
   <div class="hero">
     <span class="ico">🐄</span>
     <h2>పాల డైరీ</h2>
@@ -144,19 +162,20 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
     </div>
 
     <button class="btn btn-primary" onclick="startSession()">▶ రికార్డ్ మొదలుపెట్టండి</button>
-    <button class="btn btn-outline" onclick="goReport()">📊 నెల బిల్లు చూడండి</button>
+    <button class="btn btn-outline owner-only" onclick="goReport()">📊 నెల బిల్లు చూడండి</button>
+    <button class="btn btn-grey" onclick="logout()" style="margin-top: 15px;">🚪 లాగౌట్ (Logout)</button>
   </div>
   <div class="sgrid">
     <div class="scard"><div class="sval" id="h-custs">0</div><div class="slbl">కస్టమర్లు 👥</div></div>
     <div class="scard"><div class="sval" id="h-today">0</div><div class="slbl">ఈరోజు ✅</div></div>
   </div>
-  <div class="card" style="background:#E8F5E9;border-color:#A5D6A7;">
+  <div class="card owner-only" style="background:#E8F5E9;border-color:#A5D6A7;">
     <p style="font-size:.85rem;color:#2E7D32;font-weight:600;">💡 Chrome Browser లో తెరవండి. Telugu Voice కోసం Settings → Language → తెలుగు అని చేర్చండి.</p>
   </div>
   <div class="bnav">
     <div class="bni active" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
-    <div class="bni" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
-    <div class="bni" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni owner-only" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni owner-only" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
     <div class="bni" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
   </div>
 </div>
@@ -216,17 +235,17 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
     <div class="card">
       <p style="font-weight:700;font-size:1.05rem;text-align:center;margin-bottom:12px;">🥛 ఎంత పాలు తీసుకున్నారు? (లీటర్లు)</p>
       <div class="qty-chips">
-        <button class="btn btn-outline btn-sm" onclick="setQty(.5)">½ L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(.25)">¼ L (250)</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(.5)">½ L (500)</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(.75)">¾ L (750)</button>
         <button class="btn btn-outline btn-sm" onclick="setQty(1)">1 L</button>
+        <button class="btn btn-outline btn-sm" onclick="setQty(1.25)">1¼ L</button>
         <button class="btn btn-outline btn-sm" onclick="setQty(1.5)">1½ L</button>
         <button class="btn btn-outline btn-sm" onclick="setQty(2)">2 L</button>
         <button class="btn btn-outline btn-sm" onclick="setQty(2.5)">2½ L</button>
-        <button class="btn btn-outline btn-sm" onclick="setQty(3)">3 L</button>
-        <button class="btn btn-outline btn-sm" onclick="setQty(4)">4 L</button>
-        <button class="btn btn-outline btn-sm" onclick="setQty(5)">5 L</button>
       </div>
       <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-        <input type="number" id="qinp" step="0.5" min="0.5" placeholder="లీటర్లు టైప్ చేయండి"
+        <input type="number" id="qinp" step="0.25" min="0.25" placeholder="లీటర్లు టైప్ చేయండి"
           style="flex:1;padding:13px;border:1.5px solid var(--border);border-radius:11px;font-size:1.1rem;font-family:inherit;background:var(--bg);">
         <button class="btn btn-success btn-sm" onclick="doQty()" style="padding:13px 18px;font-size:1rem;">✓ సేవ్</button>
       </div>
@@ -241,7 +260,7 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
     <div class="scard"><div class="sval" id="su-pres">0</div><div class="slbl">వచ్చారు ✅</div></div>
     <div class="scard"><div class="sval" id="su-abs">0</div><div class="slbl">రాలేదు ❌</div></div>
     <div class="scard"><div class="sval" id="su-lit">0</div><div class="slbl">మొత్తం లీటర్లు 🥛</div></div>
-    <div class="scard"><div class="sval" id="su-amt">₹0</div><div class="slbl">మొత్తం అమౌంట్ 💰</div></div>
+    <div class="scard owner-only"><div class="sval" id="su-amt">₹0</div><div class="slbl">మొత్తం అమౌంట్ 💰</div></div>
   </div>
   <div class="card">
     <h3 style="margin-bottom:10px;font-size:1.05rem;">📋 వివరాలు</h3>
@@ -267,8 +286,8 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
   <div id="clist" class="pb80"></div>
   <div class="bnav">
     <div class="bni" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
-    <div class="bni active" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
-    <div class="bni" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni active owner-only" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni owner-only" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
     <div class="bni" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
   </div>
 </div>
@@ -291,8 +310,8 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
   <div style="height:80px;"></div>
   <div class="bnav">
     <div class="bni" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
-    <div class="bni" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
-    <div class="bni active" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni owner-only" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni active owner-only" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
     <div class="bni" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
   </div>
 </div>
@@ -306,8 +325,8 @@ body{font-family:'Noto Sans Telugu',sans-serif;background:var(--bg);color:var(--
   <div style="height:80px;"></div>
   <div class="bnav">
     <div class="bni" onclick="go('s-home')"><span class="bico">🏠</span><span class="blbl">హోమ్</span></div>
-    <div class="bni" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
-    <div class="bni" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
+    <div class="bni owner-only" onclick="go('s-custs')"><span class="bico">👥</span><span class="blbl">కస్టమర్లు</span></div>
+    <div class="bni owner-only" onclick="goReport()"><span class="bico">📊</span><span class="blbl">బిల్లు</span></div>
     <div class="bni active" onclick="go('s-history')"><span class="bico">📅</span><span class="blbl">చరిత్ర</span></div>
   </div>
 </div>
@@ -359,6 +378,7 @@ const DB = {
 let curSess=null, rcList=[], rcIdx=0, pendCust=null, mode='yn';
 let workingDate = null; 
 let pendingLiters = 0;  
+let currentRole = null; // 'worker' or 'owner'
 
 function dtStr(d){ const x=d||new Date(); return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}`; }
 function p2(n){ return String(n).padStart(2,'0'); }
@@ -370,6 +390,41 @@ function toast(msg,ms=2600){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),ms);
+}
+
+// ============================================================
+//  LOGIN LOGIC
+// ============================================================
+function doLogin(roleAttempt) {
+  const pin = document.getElementById('login-pin').value;
+  
+  if (roleAttempt === 'worker') {
+    if (pin === '1101') {
+      currentRole = 'worker';
+      document.body.classList.add('worker-mode');
+      toast('వర్కర్ లాగిన్ సక్సెస్!');
+      go('s-home');
+    } else {
+      toast('పాస్‌వర్డ్ తప్పు! (Wrong Password)');
+    }
+  } else if (roleAttempt === 'owner') {
+    if (pin === '2305') {
+      currentRole = 'owner';
+      document.body.classList.remove('worker-mode');
+      toast('ఓనర్ లాగిన్ సక్సెస్!');
+      go('s-home');
+    } else {
+      toast('పాస్‌వర్డ్ తప్పు! (Wrong Password)');
+    }
+  }
+}
+
+function logout() {
+  currentRole = null;
+  document.body.classList.remove('worker-mode');
+  document.getElementById('login-pin').value = '';
+  go('s-login');
+  toast('లాగౌట్ అయింది (Logged out)');
 }
 
 // ============================================================
@@ -405,14 +460,13 @@ function initHome(){
   workingDate = dtStr();
   document.getElementById('h-today').textContent=DB.todayRecs().length;
   
-  // Notice we use the onEnd callback here safely
   setTimeout(()=>{
-    spk(`నమస్కారం! ${g}. ఈరోజు ${fmtDate(d)}. రికార్డ్ మొదలుపెట్టాలంటే బటన్ నొక్కండి.`, true);
+    spk(`నమస్కారం! ${g}. రికార్డ్ మొదలుపెట్టాలంటే బటన్ నొక్కండి.`, true);
   },400);
 }
 
 // ============================================================
-//  SPEECH — Improved Voice Engine (MOVED UP FOR ACCESSIBILITY)
+//  SPEECH — Improved Voice Engine
 // ============================================================
 const synth = window.speechSynthesis;
 let teVoice = null;
@@ -426,7 +480,6 @@ function loadVoices() {
 synth.onvoiceschanged = loadVoices; 
 loadVoices();
 
-// NEW: added onEndCallback to trigger mic exactly when speaking stops
 function spk(txt, forceEnglish = false, onEndCallback = null) {
   try {
     synth.cancel();
@@ -447,14 +500,12 @@ function spk(txt, forceEnglish = false, onEndCallback = null) {
     
     if(onEndCallback){
         u.onend = onEndCallback;
-        // Fallback in case onend never fires due to browser glitch
         u.onerror = onEndCallback;
     }
     
     synth.speak(u);
   } catch (e) { 
     console.log('TTS err', e); 
-    // Fallback if TTS entirely fails
     if(onEndCallback) setTimeout(onEndCallback, 1500);
   }
 }
@@ -471,7 +522,6 @@ function startSession(){
   
   mode = 'choose_session'; 
   
-  // Use the perfect timing callback to start listening
   spk('మీరు ఉదయం కస్టమర్లు చెప్పాలా, సాయంత్రం కస్టమర్లు చెప్పాలా?', false, () => {
       startListen();
   });
@@ -485,7 +535,7 @@ function pickSession(sess){
   if(!custs.length){
     toast('ఈ సమయానికి కస్టమర్లు లేరు.');
     spk('ఈ సమయానికి కస్టమర్లు లేరు. కస్టమర్లు జోడించండి.');
-    setTimeout(()=>go('s-custs'),2000); return;
+    setTimeout(()=>go('s-home'),2000); return;
   }
   
   rcList=custs; rcIdx=0;
@@ -621,11 +671,11 @@ function showSum(){
     </div>
   `).join('');
   const sn=curSess==='morning'?'ఉదయం':'సాయంత్రం';
-  spk(`${sn} రికార్డ్ పూర్తయింది. ${pres.length} కస్టమర్లు పాలు తీసుకున్నారు. మొత్తం ${tL} లీటర్లు, ₹${tA}.`);
+  spk(`${sn} రికార్డ్ పూర్తయింది. ${pres.length} కస్టమర్లు పాలు తీసుకున్నారు.`);
 }
 
 // ============================================================
-//  CUSTOMERS & REPORT & HISTORY 
+//  CUSTOMERS & REPORT & WHATSAPP
 // ============================================================
 let editId=null, cf='all';
 function renderC(f){
@@ -699,9 +749,6 @@ function delC(id){
 
 function closeM(){ document.getElementById('modal-c').classList.remove('open'); }
 
-// ============================================================
-//  WHATSAPP
-// ============================================================
 function sendWA(id){
   const c=DB.gc().find(x=>x.id===id);
   if(!c||!c.phone){ toast('మొబైల్ నంబర్ లేదు! ముందు జోడించండి.'); return; }
@@ -713,11 +760,10 @@ function sendWA(id){
   const mn=MONS[now.getMonth()];
   const msg=`నమస్కారం ${c.name} గారు! 🐄\n\n📅 ${mn} ${now.getFullYear()} పాల బిల్లు:\n━━━━━━━━━━━━\n🥛 మొత్తం పాలు: ${tL.toFixed(1)} లీటర్లు\n💰 మొత్తం బిల్లు: ₹${tA.toFixed(0)}\n━━━━━━━━━━━━\nధన్యవాదాలు! 🙏`;
   
-  // FIX: Check if the number already starts with 91 to prevent doubling it
+  // FIX: Check if the number already starts with 91
   const phoneNum = c.phone.startsWith('91') ? c.phone : '91' + c.phone;
   window.open(`https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`);
 }
-
 
 function initReport(){
   const sel=document.getElementById('rep-sel');
@@ -758,7 +804,7 @@ function loadReport(){
         </div>
         <div style="font-size:1.4rem;font-weight:800;color:var(--pdark);">₹${d.A.toFixed(0)}</div>
       </div>
-      ${c&&c.phone?`<button class="btn btn-success btn-sm" onclick="sendWA('${d.id}')" style="width:100%;padding:11px;">📲 WhatsApp బిల్లు పంపండి (${c.phone})</button>`:'<p style="font-size:.78rem;color:var(--muted);">📵 నంబర్ జోడించండి WhatsApp కోసం</p>'}
+      ${c&&c.phone?`<button class="btn btn-success btn-sm" onclick="sendWA('${d.id}')" style="width:100%;padding:11px;">📲 WhatsApp బిల్లు పంపండి</button>`:'<p style="font-size:.78rem;color:var(--muted);">📵 నంబర్ జోడించండి WhatsApp కోసం</p>'}
     </div>`
   }).join('');
 }
@@ -779,36 +825,33 @@ function loadHistory(){
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
       <span style="background:#E8F5E9;color:var(--green);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">✅ ${pres.length} వచ్చారు</span>
       <span style="background:#FFF3E0;color:var(--primary);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">🥛 ${tL.toFixed(1)} L</span>
-      <span style="background:#E3F2FD;color:var(--blue);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">💰 ₹${tA.toFixed(0)}</span>
+      <span class="owner-only" style="background:#E3F2FD;color:var(--blue);padding:5px 12px;border-radius:20px;font-size:.82rem;font-weight:700;">💰 ₹${tA.toFixed(0)}</span>
     </div>
     ${recs.map(r=>`
     <div class="list-item">
       <div>
         <div class="lname">${r.cname} <small style="color:var(--muted);font-size:.75rem;">${r.sess==='morning'?'🌅':'🌙'}</small></div>
-        <div class="ldetail">${r.liters>0?r.liters+' L · ₹'+r.amount:''}</div>
+        <div class="ldetail">${r.liters>0 ? r.liters+' L' + (currentRole === 'owner' ? ' · ₹'+r.amount : '') : ''}</div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
           <span class="badge ${r.status==='present'?'b-green':r.status==='absent'?'b-red':'b-grey'}">
             ${r.status==='present'?'✅':r.status==='absent'?'❌':'⏭'}
           </span>
-          <button class="btn btn-danger btn-sm" style="padding:4px 8px; margin:0; border-radius:8px;" onclick="delRec('${r.cid}', '${r.date}', '${r.sess}')">🗑</button>
+          ${currentRole === 'owner' ? `<button class="btn btn-danger btn-sm" style="padding:4px 8px; margin:0; border-radius:8px;" onclick="delRec('${r.cid}', '${r.date}', '${r.sess}')">🗑</button>` : ''}
       </div>
     </div>`).join('')}`;
 }
 
-// NEW: Function to safely delete a transaction
 function delRec(cid, date, sess) {
   if(!confirm('ఈ రికార్డ్ ను తొలగించాలా? (Are you sure you want to delete this record?)')) return;
   
   const allRecs = DB.gr();
-  // Keep everything EXCEPT the specific record we want to delete
   const filtered = allRecs.filter(r => !(r.cid === cid && r.date === date && r.sess === sess));
   
-  DB.sr(filtered); // Save the updated list back to the database
-  loadHistory();   // Refresh the screen
-  toast('రికార్డ్ తొలగించబడింది 🗑'); // Show success message
+  DB.sr(filtered); 
+  loadHistory();   
+  toast('రికార్డ్ తొలగించబడింది 🗑'); 
 }
-
 
 // ============================================================
 //  SPEECH RECOGNITION — Multi-language Engine
@@ -865,7 +908,7 @@ function startListen(){
     };
     recog.onerror=(e)=>{ console.log('recog err',e.error); listening=false; };
     try{ recog.start(); }catch(e){}
-  },350); // slight buffer to ensure TTS is completely released
+  },350); 
 }
 
 function stopListen(){
@@ -938,72 +981,23 @@ function processVoice(txt){
 }
 
 // Telugu, English, Hindi Dictionaries
-// ============================================================
-//  MULTI-LANGUAGE DICTIONARIES (EXPANDED)
-// ============================================================
-
-function isMorning(t){ 
-  return [
-    'ఉదయం', 'పొద్దున', 'పొద్దున్న', 'ఉదయమే', 'పొద్దుగాల', // Telugu variations
-    'morning', 'మార్నింగ్', // English & transliterated
-    'subah', 'సుబహ్', 'సుబా' // Hindi & transliterated
-  ].some(w => t.includes(w)); 
-}
-
-function isEvening(t){ 
-  return [
-    'సాయంత్రం', 'సాయింత్రం', 'సంధ్య', 'మాపు', // Telugu variations
-    'evening', 'ఈవినింగ్', // English & transliterated
-    'shaam', 'షాం', 'శ్యామ్' // Hindi & transliterated
-  ].some(w => t.includes(w)); 
-}
-
-function isYes(t){ 
-  return [
-    'అవును', 'ఆ', 'హా', 'హాన్', 'సరే', 'అలాగే', 'తీసుకున్నారు', 'తీసుకున్నాడు', 'తీసుకుంది', // Telugu
-    'yes', 'yeah', 'ok', 'ఒకే', 'ఓకే', 'sure', // English & transliterated
-    'haan', 'ji', 'జీ', 'హాఁ' // Hindi & transliterated
-  ].some(w => t.includes(w)); 
-}
-
-function isNo(t){ 
-  return [
-    'లేదు', 'లే', 'వద్దు', 'తీసుకోలేదు', 'రాలేదు', 'కాదు', 'ఇవ్వలేదు', 'లేదండి', // Telugu
-    'no', 'not', 'absent', 'ఆబ్సెంట్', // English & transliterated
-    'nahi', 'నహి', 'నహీ' // Hindi & transliterated
-  ].some(w => t.includes(w)); 
-}
+function isMorning(t){ return ['ఉదయం', 'పొద్దున', 'పొద్దున్న', 'ఉదయమే', 'పొద్దుగాల', 'morning', 'మార్నింగ్', 'subah', 'సుబహ్', 'సుబా'].some(w => t.includes(w)); }
+function isEvening(t){ return ['సాయంత్రం', 'సాయింత్రం', 'సంధ్య', 'మాపు', 'evening', 'ఈవినింగ్', 'shaam', 'షాం', 'శ్యామ్'].some(w => t.includes(w)); }
+function isYes(t){ return ['అవును', 'ఆ', 'హా', 'హాన్', 'సరే', 'అలాగే', 'తీసుకున్నారు', 'తీసుకున్నాడు', 'తీసుకుంది', 'yes', 'yeah', 'ok', 'ఒకే', 'ఓకే', 'sure', 'haan', 'ji', 'జీ', 'హాఁ'].some(w => t.includes(w)); }
+function isNo(t){ return ['లేదు', 'లే', 'వద్దు', 'తీసుకోలేదు', 'రాలేదు', 'కాదు', 'ఇవ్వలేదు', 'లేదండి', 'no', 'not', 'absent', 'ఆబ్సెంట్', 'nahi', 'నహి', 'నహీ'].some(w => t.includes(w)); }
 
 function parseQty(t){
-  // 1. First, try to catch actual numbers spoken or typed (like "2" or "1.5")
   const dm=t.match(/(\d+\.?\d*)/); 
-  // If the number is between 0 and 100, accept it. (If it hears "250" or "750", it will skip this and check the dictionary below)
   if(dm){ const v=parseFloat(dm[1]); if(v>0&&v<=100) return v; }
   
-  // 2. Expanded dictionary mapping spoken words to exact decimal numbers
   const nm={
-    // 250ml / 0.25L
     'పావు':0.25, 'పావులీటరు':0.25, 'పావు లీటరు':0.25, '250':0.25, '250ml':0.25, 'paavu':0.25, 'పావ్':0.25, 'pav':0.25,
-    
-    // 500ml / 0.5L (Half)
     'అర':0.5, 'హాఫ్':0.5, 'half':0.5, 'aadha':0.5, 'ఆధా':0.5, 'అరలీటరు':0.5, '500':0.5, '500ml':0.5,
-
-    // 750ml / 0.75L
     'ముప్పావు':0.75, 'ముప్పావులీటరు':0.75, 'ముప్పావు లీటరు':0.75, '750':0.75, '750ml':0.75, 'muppaavu':0.75, 'paune':0.75, 'పోనే':0.75,
-
-    // 1.25L
     'ఒకటింబావు':1.25, 'ఒకటి పావు':1.25, 'సవా':1.25, 'sava':1.25, 'సవా లీటరు':1.25,
-
-    // 1.5L
     'ఒకటిన్నర':1.5, 'dedh':1.5, 'డేడ్':1.5, 'ఒకటిన్నర లీటరు':1.5,
-
-    // 1.75L
     'ఒకటి ముప్పావు':1.75, 'పావు తక్కువ రెండు':1.75, 'పావుతక్కువ రెండు':1.75, 'paune do':1.75,
-
-    // 2.5L
     'రెండున్నర':2.5, 'dhai':2.5, 'ఢాయీ':2.5, 'డై':2.5, 'రెండున్నర లీటరు':2.5,
-
-    // Whole Numbers (1 to 10)
     'ఒకటి':1, 'ఒక':1, 'one':1, 'ek':1, 'ఏక్':1, 'ఒకలీటరు':1, 'వన్':1,
     'రెండు':2, 'two':2, 'do':2, 'దో':2, 'టూ':2,
     'మూడు':3, 'three':3, 'teen':3, 'తీన్':3,
@@ -1016,14 +1010,8 @@ function parseQty(t){
     'పది':10, 'ten':10, 'das':10, 'దస్':10, 'టెన్':10
   };
   
-  // Sort the dictionary by word length (longest first). 
-  // This ensures "పావు తక్కువ రెండు" (1.75) is caught before it accidentally catches just "రెండు" (2)
   const sortedKeys = Object.keys(nm).sort((a, b) => b.length - a.length);
-  
-  for(const w of sortedKeys){ 
-    if(t.includes(w)) return nm[w]; 
-  }
-  
+  for(const w of sortedKeys){ if(t.includes(w)) return nm[w]; }
   return null;
 }
 
@@ -1041,8 +1029,7 @@ function backupData() {
 
   const backupJSON = JSON.stringify({ customers: allCusts, records: allRecords });
   
-  // Replace this placeholder with your phone number (with country code, e.g., 919876543210)
-  const myNumber = "919666496078"; 
+  const myNumber = "91YOUR_NUMBER_HERE"; 
   const msg = `📦 *పాల డైరీ బ్యాకప్* 📦\n\nతేదీ: ${fmtDate()}\n\nదయచేసి ఈ మెసేజ్ ని జాగ్రత్తగా దాచుకోండి. (కాపీ చేసి ఫైల్ లో సేవ్ చేసుకోండి):\n\n${backupJSON}`;
   
   window.open(`https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`);
@@ -1052,138 +1039,137 @@ function backupData() {
 //  INIT — Real Customer Data Uploaded
 // ============================================================
 function initSamples(){
-  if(DB.gc().length>0) return; // If data already exists, don't overwrite it
+  if(DB.gc().length>0) return; 
   
   DB.sc([
     // --- EVENING CUSTOMERS ---
-    {id:'e1', name:'Naresh Beside Shed', phone:'8074350032', sess:'evening', price:80, active:true},
-    {id:'e2', name:'Saritha Beside shed', phone:'6302337959', sess:'evening', price:80, active:true},
-    {id:'e3', name:'Sai Durga Nagraj', phone:'8309660271', sess:'evening', price:90, active:true},
-    {id:'e4', name:'Sanjeev Kumar', phone:'8790993825', sess:'evening', price:80, active:true},
-    {id:'e5', name:'Srinivas Co Brother', phone:'9985357947', sess:'evening', price:80, active:true},
-    {id:'e6', name:'Kirana Shop', phone:'8187079495', sess:'evening', price:80, active:true},
-    {id:'e7', name:'Nagaraju', phone:'9502112771', sess:'evening', price:90, active:true},
-    {id:'e8', name:'Rubin', phone:'9866043585', sess:'evening', price:80, active:true},
-    {id:'e9', name:'Srikanth Bava', phone:'9912221373', sess:'evening', price:80, active:true},
-    {id:'e10', name:'Panthulu opp road', phone:'9246266917', sess:'evening', price:90, active:true},
-    {id:'e11', name:'Ration shop aunty', phone:'9346991329', sess:'evening', price:90, active:true},
-    {id:'e12', name:'Vanitha Ration shop', phone:'9652302438', sess:'evening', price:90, active:true},
-    {id:'e13', name:'Dancer Srinivas', phone:'9989352523', sess:'evening', price:80, active:true},
-    {id:'e14', name:'Mestiri Dancer', phone:'8121727023', sess:'evening', price:80, active:true},
-    {id:'e15', name:'Beside dance', phone:'8977875925', sess:'evening', price:90, active:true},
-    {id:'e16', name:'Murthi Ravindra Nag', phone:'7032916617', sess:'evening', price:80, active:true},
-    {id:'e17', name:'Ravi Kumar Evng', phone:'9885656308', sess:'evening', price:80, active:true},
-    {id:'e18', name:'PremKumar', phone:'7794898083', sess:'evening', price:90, active:true},
-    {id:'e19', name:'Gangayya', phone:'9985676879', sess:'evening', price:80, active:true},
-    {id:'e20', name:'Nethaji Nagar', phone:'9010729485', sess:'evening', price:80, active:true},
-    {id:'e21', name:'Beside nethaji nagar', phone:'6305866983', sess:'evening', price:90, active:true},
-    {id:'e22', name:'Prashanth Nag Anjali Right', phone:'9676138066', sess:'evening', price:90, active:true},
-    {id:'e23', name:'Prashanth Nag Swapna Left', phone:'9912274789', sess:'evening', price:90, active:true},
-    {id:'e24', name:'Nalini Aunty 301', phone:'7661825560', sess:'evening', price:90, active:true},
-    {id:'e25', name:'Nalini Aunty 302', phone:'9398869892', sess:'evening', price:90, active:true},
-    {id:'e26', name:'Upender uncle', phone:'9949627575', sess:'evening', price:80, active:true},
-    {id:'e27', name:'Gold Shop', phone:'9866916008', sess:'evening', price:90, active:true},
-    {id:'e28', name:'Above gandi ramana reddy', phone:'9000737247', sess:'evening', price:90, active:true},
-    {id:'e29', name:'Gandhi gold shop', phone:'8333853319', sess:'evening', price:90, active:true},
-    {id:'e30', name:'Vardan Reddy', phone:'9398629596', sess:'evening', price:90, active:true},
-    {id:'e31', name:'Prathap reddy', phone:'8790072274', sess:'evening', price:90, active:true},
-    {id:'e32', name:'Beside Vardan new Down', phone:'8008812844', sess:'evening', price:90, active:true},
-    {id:'e33', name:'Beside p.reddy raju lorry', phone:'9704640031', sess:'evening', price:90, active:true},
-    {id:'e34', name:'Besied praveen', phone:'8686286967', sess:'evening', price:90, active:true},
-    {id:'e35', name:'Beside vardan door shop', phone:'9398661931', sess:'evening', price:90, active:true},
-    {id:'e36', name:'Vijay Hos Back', phone:'9059712115', sess:'evening', price:90, active:true},
-    {id:'e37', name:'Beside karnakar', phone:'7013344081', sess:'evening', price:90, active:true},
-    {id:'e38', name:'Raju Krishna Pedda Reddy', phone:'9515941775', sess:'evening', price:90, active:true},
-    {id:'e39', name:'Pavan', phone:'8801550473', sess:'evening', price:90, active:true},
-    {id:'e40', name:'Uma Pavan', phone:'8885027310', sess:'evening', price:90, active:true},
-    {id:'e41', name:'Praveen', phone:'9394811248', sess:'evening', price:90, active:true},
-    {id:'e42', name:'Praveen relatives', phone:'9491151827', sess:'evening', price:90, active:true},
-    {id:'e43', name:'Avinash anna', phone:'900990660', sess:'evening', price:90, active:true},
-    {id:'e44', name:'Opp mohan Last', phone:'6306266750', sess:'evening', price:90, active:true},
-    {id:'e45', name:'Mohan Above 3rd', phone:'9392482252', sess:'evening', price:90, active:true},
-    {id:'e46', name:'Mohan Floor 1st', phone:'9177132826', sess:'evening', price:100, active:true},
-    {id:'e47', name:'Paramount 423', phone:'9704038866', sess:'evening', price:80, active:true},
-    {id:'e48', name:'Beside Chandhu', phone:'8333011862', sess:'evening', price:80, active:true},
-    {id:'e49', name:'Chandhu', phone:'9989819195', sess:'evening', price:80, active:true},
+    {id:'e1', name:'Naresh Beside Shed', phone:'918074350032', sess:'evening', price:80, active:true},
+    {id:'e2', name:'Saritha Beside shed', phone:'916302337959', sess:'evening', price:90, active:true},
+    {id:'e3', name:'Sai Durga Nagraj', phone:'918309660271', sess:'evening', price:90, active:true},
+    {id:'e4', name:'Sanjeev Kumar', phone:'918790993825', sess:'evening', price:80, active:true},
+    {id:'e5', name:'Srinivas Co Brother', phone:'919985357947', sess:'evening', price:90, active:true},
+    {id:'e6', name:'Kirana Shop', phone:'918187079495', sess:'evening', price:80, active:true},
+    {id:'e7', name:'Nagaraju', phone:'919502112771', sess:'evening', price:90, active:true},
+    {id:'e8', name:'Rubin', phone:'919866043585', sess:'evening', price:80, active:true},
+    {id:'e9', name:'Srikanth Bava', phone:'919912221373', sess:'evening', price:80, active:true},
+    {id:'e10', name:'Panthulu opp road', phone:'919246266917', sess:'evening', price:90, active:true},
+    {id:'e11', name:'Ration shop aunty', phone:'919346991329', sess:'evening', price:90, active:true},
+    {id:'e12', name:'Vanitha Ration shop', phone:'919652302438', sess:'evening', price:90, active:true},
+    {id:'e13', name:'Dancer Srinivas', phone:'919989352523', sess:'evening', price:80, active:true},
+    {id:'e14', name:'Mestiri Dancer', phone:'918121727023', sess:'evening', price:80, active:true},
+    {id:'e15', name:'Beside dance', phone:'918977875925', sess:'evening', price:90, active:true},
+    {id:'e16', name:'Murthi Ravindra Nag', phone:'917032916617', sess:'evening', price:80, active:true},
+    {id:'e17', name:'Ravi Kumar Evng', phone:'919885656308', sess:'evening', price:80, active:true},
+    {id:'e18', name:'PremKumar', phone:'917794898083', sess:'evening', price:90, active:true},
+    {id:'e19', name:'Gangayya', phone:'919985676879', sess:'evening', price:80, active:true},
+    {id:'e20', name:'Nethaji Nagar', phone:'919010729485', sess:'evening', price:80, active:true},
+    {id:'e21', name:'Beside nethaji nagar', phone:'916305866983', sess:'evening', price:90, active:true},
+    {id:'e22', name:'Prashanth Nag Anjali Right', phone:'919676138066', sess:'evening', price:90, active:true},
+    {id:'e23', name:'Prashanth Nag Swapna Left', phone:'919912274789', sess:'evening', price:90, active:true},
+    {id:'e24', name:'Nalini Aunty 301', phone:'917661825560', sess:'evening', price:90, active:true},
+    {id:'e25', name:'Nalini Aunty 302', phone:'919398869892', sess:'evening', price:90, active:true},
+    {id:'e26', name:'Upender uncle', phone:'919949627575', sess:'evening', price:80, active:true},
+    {id:'e27', name:'Gold Shop', phone:'919866916008', sess:'evening', price:90, active:true},
+    {id:'e28', name:'Above gandi ramana reddy', phone:'919000737247', sess:'evening', price:90, active:true},
+    {id:'e29', name:'Gandhi gold shop', phone:'918333853319', sess:'evening', price:90, active:true},
+    {id:'e30', name:'Vardan Reddy', phone:'919398629596', sess:'evening', price:90, active:true},
+    {id:'e31', name:'Prathap reddy', phone:'918790072274', sess:'evening', price:90, active:true},
+    {id:'e32', name:'Beside Vardan new Down', phone:'918008812844', sess:'evening', price:90, active:true},
+    {id:'e33', name:'Beside p.reddy raju lorry', phone:'919704640031', sess:'evening', price:90, active:true},
+    {id:'e34', name:'Besied praveen', phone:'918686286967', sess:'evening', price:90, active:true},
+    {id:'e35', name:'Beside vardan door shop', phone:'919398661931', sess:'evening', price:90, active:true},
+    {id:'e36', name:'Vijay Hos Back', phone:'919059712115', sess:'evening', price:90, active:true},
+    {id:'e37', name:'Beside karnakar', phone:'917013344081', sess:'evening', price:90, active:true},
+    {id:'e38', name:'Raju Krishna Pedda Reddy', phone:'919515941775', sess:'evening', price:90, active:true},
+    {id:'e39', name:'Pavan', phone:'918801550473', sess:'evening', price:90, active:true},
+    {id:'e40', name:'Uma Pavan', phone:'918885027310', sess:'evening', price:90, active:true},
+    {id:'e41', name:'Praveen', phone:'919394811248', sess:'evening', price:90, active:true},
+    {id:'e42', name:'Praveen relatives', phone:'919491151827', sess:'evening', price:90, active:true},
+    {id:'e43', name:'Avinash anna', phone:'91900990660', sess:'evening', price:90, active:true},
+    {id:'e44', name:'Opp mohan Last', phone:'916306266750', sess:'evening', price:90, active:true},
+    {id:'e45', name:'Mohan Above 3rd', phone:'919392482252', sess:'evening', price:90, active:true},
+    {id:'e46', name:'Mohan Floor 1st', phone:'919177132826', sess:'evening', price:90, active:true},
+    {id:'e47', name:'Paramount 423', phone:'919704038866', sess:'evening', price:90, active:true},
+    {id:'e48', name:'Beside Chandhu', phone:'918333011862', sess:'evening', price:90, active:true},
+    {id:'e49', name:'Chandhu', phone:'919989819195', sess:'evening', price:90, active:true},
 
     // --- MORNING CUSTOMERS ---
-    {id:'m1', name:'Beside Mashook', phone:'8247844925', sess:'morning', price:80, active:true},
-    {id:'m2', name:'Beside muslim suggested', phone:'9309362671', sess:'morning', price:90, active:true},
-    {id:'m3', name:'Jyothi akka', phone:'8186854678', sess:'morning', price:80, active:true},
-    {id:'m4', name:'New Arvind Nag Rd 2', phone:'9390516904', sess:'morning', price:90, active:true},
-    {id:'m5', name:'Naveen Arvind Nag Rd 2', phone:'8074808481', sess:'morning', price:80, active:true},
-    {id:'m6', name:'Shesi Gundu near Shivaji', phone:'9886046756', sess:'morning', price:90, active:true},
-    {id:'m7', name:'Beside shesi Shivaji', phone:'9010208055', sess:'morning', price:90, active:true},
-    {id:'m8', name:'Tiwari First', phone:'8790993828', sess:'morning', price:80, active:true},
-    {id:'m9', name:'Tiwari Second Ranjith', phone:'8790993815', sess:'morning', price:80, active:true},
-    {id:'m10', name:'Beside tiwari papu kumra', phone:'9959037980', sess:'morning', price:80, active:true},
-    {id:'m11', name:'Beside tiwari gsr', phone:'9505516362', sess:'morning', price:90, active:true},
-    {id:'m12', name:'Satyanarayana Relative', phone:'9182193470', sess:'morning', price:80, active:true},
-    {id:'m13', name:'Satyanarayana S Laxmi', phone:'8688634753', sess:'morning', price:80, active:true},
-    {id:'m14', name:'Beside relatives', phone:'8688983852', sess:'morning', price:90, active:true},
-    {id:'m15', name:'Satyanarayana Road No 10', phone:'8555878936', sess:'morning', price:90, active:true},
-    {id:'m16', name:'Venkat Reddy colony lane 1', phone:'9701357468', sess:'morning', price:90, active:true},
-    {id:'m17', name:'Anitha atha', phone:'9666039979', sess:'morning', price:90, active:true},
-    {id:'m18', name:'Before cm rao', phone:'9820067588', sess:'morning', price:90, active:true},
-    {id:'m19', name:'Cm rao colony new relative', phone:'8978530590', sess:'morning', price:90, active:true},
-    {id:'m20', name:'Cm rao colony new', phone:'9701378590', sess:'morning', price:90, active:true},
-    {id:'m21', name:'Eswar reddy cm suresh', phone:'9000538623', sess:'morning', price:90, active:true},
-    {id:'m22', name:'Cm Suresh', phone:'9000545557', sess:'morning', price:90, active:true},
-    {id:'m23', name:'Cm rao colony last opp', phone:'7702305015', sess:'morning', price:80, active:true},
-    {id:'m24', name:'Venkat Reddy colony lane 2', phone:'6302670850', sess:'morning', price:90, active:true},
-    {id:'m25', name:'Venkatesh Shop Backside', phone:'8328293326', sess:'morning', price:80, active:true},
-    {id:'m26', name:'Beside venkatesh shop', phone:'9398314037', sess:'morning', price:90, active:true},
-    {id:'m27', name:'Modi 501', phone:'9701084753', sess:'morning', price:90, active:true},
-    {id:'m28', name:'Sid Dad', phone:'9100556681', sess:'morning', price:80, active:true},
-    {id:'m29', name:'Rishi Mother', phone:'9440671576', sess:'morning', price:80, active:true},
-    {id:'m30', name:'Poojari 302', phone:'9490318827', sess:'morning', price:80, active:true},
-    {id:'m31', name:'Modi 208', phone:'9449545510', sess:'morning', price:90, active:true},
+    {id:'m1', name:'Beside Mashook', phone:'918247844925', sess:'morning', price:80, active:true},
+    {id:'m2', name:'Beside muslim suggested', phone:'916309362671', sess:'morning', price:90, active:true},
+    {id:'m3', name:'Jyothi akka', phone:'918186854678', sess:'morning', price:80, active:true},
+    {id:'m4', name:'New Arvind Nag Rd 2', phone:'919390516904', sess:'morning', price:90, active:true},
+    {id:'m5', name:'Naveen Arvind Nag Rd 2', phone:'918074808481', sess:'morning', price:80, active:true},
+    {id:'m6', name:'Shesi Gundu near Shivaji', phone:'919886046756', sess:'morning', price:90, active:true},
+    {id:'m7', name:'Beside shesi Shivaji', phone:'919010208055', sess:'morning', price:90, active:true},
+    {id:'m8', name:'Tiwari First', phone:'918790993828', sess:'morning', price:80, active:true},
+    {id:'m9', name:'Tiwari Second Ranjith', phone:'918790993815', sess:'morning', price:80, active:true},
+    {id:'m10', name:'Beside tiwari papu kumra', phone:'919959037980', sess:'morning', price:80, active:true},
+    {id:'m11', name:'Beside tiwari gsr', phone:'919505516362', sess:'morning', price:90, active:true},
+    {id:'m12', name:'Satyanarayana Relative', phone:'919182193470', sess:'morning', price:80, active:true},
+    {id:'m13', name:'Satyanarayana S Laxmi', phone:'918688634753', sess:'morning', price:80, active:true},
+    {id:'m14', name:'Beside relatives', phone:'918688983852', sess:'morning', price:90, active:true},
+    {id:'m15', name:'Satyanarayana Road No 10', phone:'918555878936', sess:'morning', price:90, active:true},
+    {id:'m16', name:'Venkat Reddy colony lane 1', phone:'919701357468', sess:'morning', price:90, active:true},
+    {id:'m17', name:'Anitha atha', phone:'919666039979', sess:'morning', price:90, active:true},
+    {id:'m18', name:'Before cm rao', phone:'919820067588', sess:'morning', price:90, active:true},
+    {id:'m19', name:'Cm rao colony new relative', phone:'918978530590', sess:'morning', price:90, active:true},
+    {id:'m20', name:'Cm rao colony new', phone:'919701378590', sess:'morning', price:90, active:true},
+    {id:'m21', name:'Eswar reddy cm suresh', phone:'919000538623', sess:'morning', price:90, active:true},
+    {id:'m22', name:'Cm Suresh', phone:'919000545557', sess:'morning', price:90, active:true},
+    {id:'m23', name:'Cm rao colony last opp', phone:'917702305015', sess:'morning', price:80, active:true},
+    {id:'m24', name:'Venkat Reddy colony lane 2', phone:'916302670850', sess:'morning', price:90, active:true},
+    {id:'m25', name:'Venkatesh Shop Backside', phone:'918328293326', sess:'morning', price:80, active:true},
+    {id:'m26', name:'Beside venkatesh shop', phone:'919398314037', sess:'morning', price:90, active:true},
+    {id:'m27', name:'Modi 501', phone:'919701084753', sess:'morning', price:80, active:true},
+    {id:'m28', name:'Sid Dad', phone:'919100556681', sess:'morning', price:80, active:true},
+    {id:'m29', name:'Rishi Mother', phone:'919440671576', sess:'morning', price:80, active:true},
+    {id:'m30', name:'Poojari 302', phone:'919490318827', sess:'morning', price:80, active:true},
+    {id:'m31', name:'Modi 208', phone:'919449545510', sess:'morning', price:75, active:true},
     {id:'m32', name:'Modi 203', phone:'', sess:'morning', price:90, active:true},
-    {id:'m33', name:'Modi B 401', phone:'9247126423', sess:'morning', price:90, active:true},
-    {id:'m34', name:'Modi 1C 1st floor', phone:'9246808434', sess:'morning', price:90, active:true},
-    {id:'m35', name:'Vinod Ice Cream D105', phone:'9390513838', sess:'morning', price:90, active:true},
-    {id:'m36', name:'Sai shilpa 103', phone:'9482040034', sess:'morning', price:80, active:true},
-    {id:'m37', name:'Sai shilpa 203', phone:'7569071817', sess:'morning', price:80, active:true},
-    {id:'m38', name:'Sai shilpa 201', phone:'9959917160', sess:'morning', price:90, active:true},
-    {id:'m39', name:'Medha 502', phone:'7799477477', sess:'morning', price:80, active:true},
-    {id:'m40', name:'Medha 509', phone:'9346207119', sess:'morning', price:90, active:true},
-    {id:'m41', name:'Medha 309', phone:'8790244355', sess:'morning', price:90, active:true},
-    {id:'m42', name:'Medha 2nd floor opp lift', phone:'6304487419', sess:'morning', price:90, active:true},
-    {id:'m43', name:'Medha 204', phone:'9666079666', sess:'morning', price:90, active:true},
+    {id:'m33', name:'Modi B 401', phone:'919247126423', sess:'morning', price:90, active:true},
+    {id:'m34', name:'Modi 1C 1st floor', phone:'919246808434', sess:'morning', price:90, active:true},
+    {id:'m35', name:'Vinod Ice Cream D105', phone:'919390513838', sess:'morning', price:90, active:true},
+    {id:'m36', name:'Sai shilpa 103', phone:'919482040034', sess:'morning', price:80, active:true},
+    {id:'m37', name:'Sai shilpa 203', phone:'917569071817', sess:'morning', price:80, active:true},
+    {id:'m38', name:'Sai shilpa 201', phone:'919959917160', sess:'morning', price:90, active:true},
+    {id:'m39', name:'Medha 502', phone:'917799477477', sess:'morning', price:80, active:true},
+    {id:'m40', name:'Medha 509', phone:'919346207119', sess:'morning', price:90, active:true},
+    {id:'m41', name:'Medha 309', phone:'918790244355', sess:'morning', price:90, active:true},
+    {id:'m42', name:'Medha 2nd floor opp lift', phone:'916304487419', sess:'morning', price:80, active:true},
+    {id:'m43', name:'Medha 204', phone:'919666079666', sess:'morning', price:90, active:true},
     {id:'m44', name:'Medha G2', phone:'', sess:'morning', price:90, active:true},
-    {id:'m45', name:'Beside Medha', phone:'9618558104', sess:'morning', price:90, active:true},
-    {id:'m46', name:'Manikanta Nilayam 3rd', phone:'9703401903', sess:'morning', price:90, active:true},
-    {id:'m47', name:'Vidha', phone:'7995510555', sess:'morning', price:90, active:true},
-    {id:'m48', name:'Viswa sai 301', phone:'8588062241', sess:'morning', price:80, active:true},
-    {id:'m49', name:'Viswa sai 303', phone:'8074898248', sess:'morning', price:90, active:true},
-    {id:'m50', name:'Viswa sai 504', phone:'9966126689', sess:'morning', price:90, active:true},
-    {id:'m51', name:'Kamlakar Reddy', phone:'9985560068', sess:'morning', price:90, active:true},
-    {id:'m52', name:'Avenue 810', phone:'8374530052', sess:'morning', price:90, active:true},
-    {id:'m53', name:'Above Blade shop', phone:'8950297679', sess:'morning', price:90, active:true},
-    {id:'m54', name:'Kakthiya 302', phone:'9010844486', sess:'morning', price:90, active:true},
-    {id:'m55', name:'KYR Pradeep 203', phone:'9952696488', sess:'morning', price:80, active:true},
-    {id:'m56', name:'Beside Rockstar hair sampath', phone:'7075805465', sess:'morning', price:90, active:true},
-    {id:'m57', name:'Havisa BackSide', phone:'9898600681', sess:'morning', price:90, active:true},
-    {id:'m58', name:'Shanthinikethan 114', phone:'7013891869', sess:'morning', price:90, active:true},
-    {id:'m59', name:'Shanthinikethan 213', phone:'9985922722', sess:'morning', price:90, active:true},
-    {id:'m60', name:'Shanthinikethan 314', phone:'950295071', sess:'morning', price:90, active:true},
-    {id:'m61', name:'Vijay puri colony', phone:'8985688115', sess:'morning', price:80, active:true},
-    {id:'m62', name:'Modi Care', phone:'9032625666', sess:'morning', price:40, active:true},
-    {id:'m63', name:'Shoba Aunty', phone:'9948314549', sess:'morning', price:90, active:true},
-    {id:'m64', name:'Vicky', phone:'7207302626', sess:'morning', price:80, active:true},
+    {id:'m45', name:'Beside Medha', phone:'919618558104', sess:'morning', price:90, active:true},
+    {id:'m46', name:'Manikanta Nilayam 3rd', phone:'919703401903', sess:'morning', price:90, active:true},
+    {id:'m47', name:'Vidha', phone:'917995510555', sess:'morning', price:90, active:true},
+    {id:'m48', name:'Viswa sai 301', phone:'918588062241', sess:'morning', price:80, active:true},
+    {id:'m49', name:'Viswa sai 303', phone:'918074898248', sess:'morning', price:90, active:true},
+    {id:'m50', name:'Viswa sai 504', phone:'919966126689', sess:'morning', price:90, active:true},
+    {id:'m51', name:'Kamlakar Reddy', phone:'919985560068', sess:'morning', price:90, active:true},
+    {id:'m52', name:'Avenue 810', phone:'918374530052', sess:'morning', price:90, active:true},
+    {id:'m53', name:'Above Blade shop', phone:'918950297679', sess:'morning', price:90, active:true},
+    {id:'m54', name:'Kakthiya 302', phone:'919010844486', sess:'morning', price:90, active:true},
+    {id:'m55', name:'KYR Pradeep 203', phone:'919952696488', sess:'morning', price:80, active:true},
+    {id:'m56', name:'Beside Rockstar hair sampath', phone:'917075805465', sess:'morning', price:90, active:true},
+    {id:'m57', name:'Havisa BackSide', phone:'919898600681', sess:'morning', price:90, active:true},
+    {id:'m58', name:'Shanthinikethan 114', phone:'917013891869', sess:'morning', price:90, active:true},
+    {id:'m59', name:'Shanthinikethan 213', phone:'919985922722', sess:'morning', price:90, active:true},
+    {id:'m60', name:'Shanthinikethan 314', phone:'91950295071', sess:'morning', price:90, active:true},
+    {id:'m61', name:'Vijay puri colony', phone:'918985688115', sess:'morning', price:80, active:true},
+    {id:'m62', name:'Modi Care', phone:'919032625666', sess:'morning', price:40, active:true},
+    {id:'m63', name:'Shoba Aunty', phone:'919948314549', sess:'morning', price:90, active:true},
+    {id:'m64', name:'Vicky', phone:'917207302626', sess:'morning', price:80, active:true},
     {id:'m65', name:'Rampally circle', phone:'', sess:'morning', price:80, active:true},
-    {id:'m66', name:'Hospital Back Laxmi', phone:'9640913321', sess:'morning', price:80, active:true},
-    {id:'m67', name:'Hospital Back 5th Left', phone:'9491380759', sess:'morning', price:80, active:true},
-    {id:'m68', name:'Hospital Back 3rd', phone:'7989012995', sess:'morning', price:80, active:true},
-    {id:'m69', name:'Hospital Back 2nd Left', phone:'8143482483', sess:'morning', price:80, active:true},
-    {id:'m70', name:'Hospital Back 2nd Right', phone:'9652198919', sess:'morning', price:80, active:true},
-    {id:'m71', name:'Vani beside tution aunty', phone:'9949377946', sess:'morning', price:80, active:true},
-    {id:'m72', name:'Tution aunty', phone:'9052057652', sess:'morning', price:80, active:true}
+    {id:'m66', name:'Hospital Back Laxmi', phone:'919640913321', sess:'morning', price:120, active:true},
+    {id:'m67', name:'Hospital Back 5th Left', phone:'919491380759', sess:'morning', price:80, active:true},
+    {id:'m68', name:'Hospital Back 3rd', phone:'917989012995', sess:'morning', price:80, active:true},
+    {id:'m69', name:'Hospital Back 2nd Left', phone:'918143482483', sess:'morning', price:80, active:true},
+    {id:'m70', name:'Hospital Back 2nd Right', phone:'919652198919', sess:'morning', price:80, active:true},
+    {id:'m71', name:'Vani beside tution aunty', phone:'919949377946', sess:'morning', price:100, active:true},
+    {id:'m72', name:'Tution aunty', phone:'919052057652', sess:'morning', price:80, active:true}
   ]);
 }
 
 initSamples();
-initHome();
 </script>
 </body>
 </html>
